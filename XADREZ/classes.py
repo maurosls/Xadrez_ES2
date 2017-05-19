@@ -9,12 +9,12 @@ class Side:
     difficulty = 0
 
 class Movement:
-    position = [[],[]]
+    position = [[],[]] #TODO: TROCAR PARA ARRAY COM 2 POSIÇÕES (X,Y)
     cost = 0
 
 class Chessman:
-    position = [[],[]]
-    nextMoves = [[],Movement]
+    position = [[],[]] #TODO: TROCAR PARA ARRAY COM 2 POSIÇÕES (X,Y)
+    nextMoves = [[],Movement] #TODO: ARRAY DE UMA DIMENSÃO COM OS OBJ MOVEMENT
     cost = 0
     name = "empty"
     def move(newPosition):
