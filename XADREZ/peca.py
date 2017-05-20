@@ -4,10 +4,11 @@ class Peca:
     sprite = None
     linha = None
     coluna = None
-
-    def __init__(self,tipo,time,sprite,linha,coluna):
+    ja_moveu = False
+    def __init__(self,tipo,time,sprite,linha,coluna,ja_moveu):
         self.tipo = tipo
         self.time = time
         self.sprite = sprite
         self.linha = linha
         self.coluna = coluna
+        self.ja_moveu = ja_moveu

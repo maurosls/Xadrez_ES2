@@ -47,39 +47,39 @@ class Tabuleiro:
         self.selecaoSprite.y = self.janela.height
 
     def inicializaMatriz(self):
-        torreP1 = Peca("torre", "preto", Sprite("Sprites/torreP.png"),0,0)
-        cavaloP1 = Peca("cavalo", "preto", Sprite("Sprites/cavaloP.png"),0,1)
-        bispoP1 = Peca("bispo", "preto", Sprite("Sprites/bispoP.png"), 0, 2)
-        rainhaP = Peca("rainha", "preto", Sprite("Sprites/rainhaP.png"), 0, 3)
-        reiP = Peca("rei", "preto", Sprite("Sprites/reiP.png"), 0, 4)
-        bispoP2 = Peca("bispo", "preto", Sprite("Sprites/bispoP.png"), 0, 5)
-        cavaloP2 = Peca("cavalo", "preto", Sprite("Sprites/cavaloP.png"), 0, 6)
-        torreP2 = Peca("torre", "preto", Sprite("Sprites/torreP.png"), 0, 7)
-        peaoP1 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"),1,0)
-        peaoP2 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"), 1, 1)
-        peaoP3 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"), 1, 2)
-        peaoP4 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"), 1, 3)
-        peaoP5 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"), 1, 4)
-        peaoP6 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"), 1, 5)
-        peaoP7 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"), 1, 6)
-        peaoP8 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"), 1, 7)
+        torreP1 = Peca("torre", "preto", Sprite("Sprites/torreP.png"),0,0,False)
+        cavaloP1 = Peca("cavalo", "preto", Sprite("Sprites/cavaloP.png"),0,1,False)
+        bispoP1 = Peca("bispo", "preto", Sprite("Sprites/bispoP.png"), 0, 2,False)
+        rainhaP = Peca("rainha", "preto", Sprite("Sprites/rainhaP.png"), 0, 3,False)
+        reiP = Peca("rei", "preto", Sprite("Sprites/reiP.png"), 0, 4,False)
+        bispoP2 = Peca("bispo", "preto", Sprite("Sprites/bispoP.png"), 0, 5,False)
+        cavaloP2 = Peca("cavalo", "preto", Sprite("Sprites/cavaloP.png"), 0, 6,False)
+        torreP2 = Peca("torre", "preto", Sprite("Sprites/torreP.png"), 0, 7,False)
+        peaoP1 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"),1,0,False)
+        peaoP2 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"), 1, 1,False)
+        peaoP3 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"), 1, 2,False)
+        peaoP4 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"), 1, 3,False)
+        peaoP5 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"), 1, 4,False)
+        peaoP6 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"), 1, 5,False)
+        peaoP7 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"), 1, 6,False)
+        peaoP8 = Peca("peao", "preto", Sprite("Sprites/peaoP.png"), 1, 7,False)
 
-        torreB1 = Peca("torre", "branco", Sprite("Sprites/torreB.png"),7,0)
-        cavaloB1 = Peca("cavalo", "branco", Sprite("Sprites/cavaloB.png"),7,1)
-        bispoB1 = Peca("bispo", "branco", Sprite("Sprites/bispoB.png"), 7, 2)
-        rainhaB = Peca("rainha", "branco", Sprite("Sprites/rainhaB.png"), 7, 3)
-        reiB = Peca("rei", "branco", Sprite("Sprites/reiB.png"), 7, 4)
-        bispoB2 = Peca("bispo", "branco", Sprite("Sprites/bispoB.png"), 7, 5)
-        cavaloB2 = Peca("cavalo", "branco", Sprite("Sprites/cavaloB.png"), 7, 6)
-        torreB2 = Peca("torre", "branco", Sprite("Sprites/torreB.png"), 7, 7)
-        peaoB1 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"),6,0)
-        peaoB2 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"), 6, 1)
-        peaoB3 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"), 6, 2)
-        peaoB4 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"), 6, 3)
-        peaoB5 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"), 6, 4)
-        peaoB6 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"), 6, 5)
-        peaoB7 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"), 6, 6)
-        peaoB8 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"), 6, 7)
+        torreB1 = Peca("torre", "branco", Sprite("Sprites/torreB.png"),7,0,False)
+        cavaloB1 = Peca("cavalo", "branco", Sprite("Sprites/cavaloB.png"),7,1,False)
+        bispoB1 = Peca("bispo", "branco", Sprite("Sprites/bispoB.png"), 7, 2,False)
+        rainhaB = Peca("rainha", "branco", Sprite("Sprites/rainhaB.png"), 7, 3,False)
+        reiB = Peca("rei", "branco", Sprite("Sprites/reiB.png"), 7, 4,False)
+        bispoB2 = Peca("bispo", "branco", Sprite("Sprites/bispoB.png"), 7, 5,False)
+        cavaloB2 = Peca("cavalo", "branco", Sprite("Sprites/cavaloB.png"), 7, 6,False)
+        torreB2 = Peca("torre", "branco", Sprite("Sprites/torreB.png"), 7, 7,False)
+        peaoB1 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"),6,0,False)
+        peaoB2 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"), 6, 1,False)
+        peaoB3 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"), 6, 2,False)
+        peaoB4 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"), 6, 3,False)
+        peaoB5 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"), 6, 4,False)
+        peaoB6 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"), 6, 5,False)
+        peaoB7 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"), 6, 6,False)
+        peaoB8 = Peca("peao", "branco", Sprite("Sprites/peaoB.png"), 6, 7,False)
 
         self.matriz = [[torreP1,cavaloP1,bispoP1,rainhaP,reiP,bispoP2,cavaloP2,torreP2],
        [peaoP1, peaoP2, peaoP3, peaoP4, peaoP5, peaoP6, peaoP7, peaoP8],
@@ -115,10 +115,38 @@ class Tabuleiro:
     def defineDisponiveis(self):
         if (self.selecao!=None):
             if(self.selecao.tipo=="peao" and self.selecao.time=="branco"):
-                disponivel = Peca("disponivel",None,Sprite("Sprites/verde.png"),self.selecao.linha-1,self.selecao.coluna)
-                self.matriz[self.selecao.linha-1][self.selecao.coluna] = disponivel
-                disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha -2,self.selecao.coluna)
-                self.matriz[self.selecao.linha -2][self.selecao.coluna] = disponivel
+                #Se peça ainda não moveu, liberar duas casas
+                if(self.selecao.ja_moveu == False):
+                    self.selecao.ja_moveu = True
+                    #Checando se há peças na linha -1
+                    if(self.matriz[self.selecao.linha-1][self.selecao.coluna] == "vazio"):
+                        disponivel = Peca("disponivel",None,Sprite("Sprites/verde.png"),self.selecao.linha-1,self.selecao.coluna,False)
+                        self.matriz[self.selecao.linha-1][self.selecao.coluna] = disponivel
+                        #Checando se há peças na linha -2
+                        if(self.matriz[self.selecao.linha-2][self.selecao.coluna] == "vazio"):
+                            disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha -2,self.selecao.coluna,False)
+                            self.matriz[self.selecao.linha -2][self.selecao.coluna] = disponivel
+                #Se peça já moveu, liberar uma casa
+                if(self.selecao.ja_moveu == True):
+                    #Checando se está saindo do tabuleiro!
+                    if(self.selecao.linha-1 >= 0):
+                        if(self.matriz[self.selecao.linha-1][self.selecao.coluna] == "vazio"):
+                            disponivel = Peca("disponivel",None,Sprite("Sprites/verde.png"),self.selecao.linha-1,self.selecao.coluna,False)
+                            self.matriz[self.selecao.linha-1][self.selecao.coluna] = disponivel
+                    else:
+                        return
+                        #PROGRAMAR A TROCA DE PEÇAS!
+                #Colorindo as peças que podem ser comidas
+                if self.selecao.linha-1 >= 0:
+                    if self.selecao.coluna+1 <= 7:
+                        if self.matriz[self.selecao.linha-1][self.selecao.coluna+1] != "vazio":
+                            return #pintar o alvo
+                    if self.selecao.coluna-1 >= 0:
+                        if self.matriz[self.selecao.linha-1][self.selecao.coluna-1] != "vazio":
+                            return #pintar o alvo
+
+
+
 
     def confirmaMovimento(self):
         update = False
