@@ -120,7 +120,7 @@ class Tabuleiro:
             if(self.selecao.tipo=="peao" and self.selecao.time=="branco"):
                 #Se peça ainda não moveu, liberar duas casas
                 if(self.selecao.ja_moveu == False):
-                    self.selecao.ja_moveu = True
+                    #self.selecao.ja_moveu = True
                     #Checando se há peças na linha -1
                     if(self.matriz[self.selecao.linha-1][self.selecao.coluna] == "vazio"):
                         disponivel = Peca("disponivel",None,Sprite("Sprites/verde.png"),self.selecao.linha-1,self.selecao.coluna,False)
@@ -154,7 +154,6 @@ class Tabuleiro:
             if (self.selecao.tipo == "peao" and self.selecao.time == "preto"):
                 # Se peça ainda não moveu, liberar duas casas
                 if (self.selecao.ja_moveu == False):
-                    self.selecao.ja_moveu = True
                     # Checando se há peças na linha +1
                     if (self.matriz[self.selecao.linha + 1][self.selecao.coluna] == "vazio"):
                         disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha + 1,
@@ -203,7 +202,8 @@ class Tabuleiro:
             self.selecao.linha = disponivelSelecionado.linha
             self.selecao.coluna = disponivelSelecionado.coluna
             self.matriz[disponivelSelecionado.linha][disponivelSelecionado.coluna] = self.selecao
-
+            if (self.selecao.tipo=="peao"):
+                self.selecao.ja_moveu = True
             self.selecao = None
             self.selecaoSprite.x=self.janela.width
             self.selecaoSprite.y=self.janela.height
