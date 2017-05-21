@@ -101,7 +101,8 @@ class Tabuleiro:
             for j in range(0, len(self.matriz[0])):
                 if (self.matriz[i][j]!="vazio"):
                     while (self.mouse.is_button_pressed(1) and
-                               self.mouse.is_over_object(self.matriz[i][j].sprite) and self.matriz[i][j].time=="branco"):
+                               self.mouse.is_over_object(self.matriz[i][j].sprite) and self.matriz[i][j].time=="branco" or self.mouse.is_button_pressed(1) and
+                               self.mouse.is_over_object(self.matriz[i][j].sprite) and self.matriz[i][j].time=="preto" ):
                         for x in range(0, len(self.matriz)):
                             for y in range(0, len(self.matriz[0])):
                                 if (self.matriz[x][y] != "vazio"):
@@ -114,6 +115,8 @@ class Tabuleiro:
 
     def defineDisponiveis(self):
         if (self.selecao!=None):
+# ---------------------------------> a partir daqui peoes brancos -------------------------------------------------------------------------------
+
             if(self.selecao.tipo=="peao" and self.selecao.time=="branco"):
                 #Se peça ainda não moveu, liberar duas casas
                 if(self.selecao.ja_moveu == False):
@@ -144,6 +147,43 @@ class Tabuleiro:
                     if self.selecao.coluna-1 >= 0:
                         if self.matriz[self.selecao.linha-1][self.selecao.coluna-1] != "vazio":
                             return #pintar o alvo
+
+
+# --------------------------------------------- a partir daqui para peos pretos -----------------------------------------------------------
+
+            if (self.selecao.tipo == "peao" and self.selecao.time == "preto"):
+                # Se peça ainda não moveu, liberar duas casas
+                if (self.selecao.ja_moveu == False):
+                    self.selecao.ja_moveu = True
+                    # Checando se há peças na linha +1
+                    if (self.matriz[self.selecao.linha + 1][self.selecao.coluna] == "vazio"):
+                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha + 1,
+                                          self.selecao.coluna, False)
+                        self.matriz[self.selecao.linha + 1][self.selecao.coluna] = disponivel
+                        # Checando se há peças na linha +2
+                        if (self.matriz[self.selecao.linha + 2][self.selecao.coluna] == "vazio"):
+                            disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha + 2,
+                                              self.selecao.coluna, False)
+                            self.matriz[self.selecao.linha + 2][self.selecao.coluna] = disponivel
+                # Se peça já moveu, liberar uma casa
+                if (self.selecao.ja_moveu == True):
+                    # Checando se está saindo do tabuleiro!
+                    if (self.selecao.linha + 1 < len(self.matriz)):
+                        if (self.matriz[self.selecao.linha + 1][self.selecao.coluna] == "vazio"):
+                            disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha + 1,
+                                              self.selecao.coluna, False)
+                            self.matriz[self.selecao.linha + 1][self.selecao.coluna] = disponivel
+                    else:
+                        return
+                        # PROGRAMAR A TROCA DE PEÇAS!
+                # Colorindo as peças que podem ser comidas
+                if self.selecao.linha + 1 < len(self.matriz):
+                    if self.selecao.coluna + 1 <= 7:
+                        if self.matriz[self.selecao.linha + 1][self.selecao.coluna + 1] != "vazio":
+                            return  # pintar o alvo
+                    if self.selecao.coluna - 1 >= 0:
+                        if self.matriz[self.selecao.linha + 1][self.selecao.coluna - 1] != "vazio":
+                            return  # pintar o alvo
 
 
 
