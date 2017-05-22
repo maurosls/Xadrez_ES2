@@ -184,7 +184,7 @@ class Tabuleiro:
                         if self.matriz[self.selecao.linha + 1][self.selecao.coluna - 1] != "vazio":
                             return  # pintar o alvo
 
-# --------------------------------------------- a partir daqui para torre brancos -----------------------------------------------------------
+# --------------------------------------------- a partir daqui para torre----------------------------------------------------------------
             if(self.selecao.tipo == "torre"):
                 for i in range (self.selecao.linha-1, -1, -1):
                     if(self.matriz[i][self.selecao.coluna] == "vazio"):
@@ -226,7 +226,6 @@ class Tabuleiro:
                         self.janela.update()
                         update = True
                         disponivelSelecionado = self.matriz[i][j]
-                        print(disponivelSelecionado.linha, " " , disponivelSelecionado.coluna)
         if (update==True):
             self.matriz[self.selecao.linha][self.selecao.coluna] = "vazio"
             self.selecao.linha = disponivelSelecionado.linha
