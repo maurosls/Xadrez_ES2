@@ -184,7 +184,36 @@ class Tabuleiro:
                         if self.matriz[self.selecao.linha + 1][self.selecao.coluna - 1] != "vazio":
                             return  # pintar o alvo
 
-
+# --------------------------------------------- a partir daqui para torre brancos -----------------------------------------------------------
+            if(self.selecao.tipo == "torre"):
+                for i in range (self.selecao.linha-1, -1, -1):
+                    if(self.matriz[i][self.selecao.coluna] == "vazio"):
+                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), i,
+                                              self.selecao.coluna, False)
+                        self.matriz[i][self.selecao.coluna] = disponivel
+                    else:
+                        break
+                for i in range(self.selecao.coluna+1, len(self.matriz[0])):
+                    if(self.matriz[self.selecao.linha][i] == "vazio"):
+                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha,
+                                              i, False)
+                        self.matriz[self.selecao.linha][i] = disponivel
+                    else:
+                        break  
+                for i in range (self.selecao.linha+1, len(self.matriz)):
+                    if(self.matriz[i][self.selecao.coluna] == "vazio"):
+                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), i,
+                                              self.selecao.coluna, False)
+                        self.matriz[i][self.selecao.coluna] = disponivel
+                    else:
+                        break
+                for i in range(self.selecao.coluna-1, -1, -1):
+                    if(self.matriz[self.selecao.linha][i] == "vazio"):
+                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha,
+                                              i, False)
+                        self.matriz[self.selecao.linha][i] = disponivel
+                    else:
+                        break  
 
 
     def confirmaMovimento(self):
@@ -197,6 +226,7 @@ class Tabuleiro:
                         self.janela.update()
                         update = True
                         disponivelSelecionado = self.matriz[i][j]
+                        print(disponivelSelecionado.linha, " " , disponivelSelecionado.coluna)
         if (update==True):
             self.matriz[self.selecao.linha][self.selecao.coluna] = "vazio"
             self.selecao.linha = disponivelSelecionado.linha
