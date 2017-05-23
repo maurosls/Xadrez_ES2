@@ -113,155 +113,189 @@ class Tabuleiro:
                         self.selecaoSprite.y = self.matriz[i][j].sprite.y
                         self.selecao = self.matriz[i][j]
 
-    def defineDisponiveis(self):
-        if (self.selecao!=None):
-# ---------------------------------> a partir daqui peoes brancos -------------------------------------------------------------------------------
 
-            if(self.selecao.tipo=="peao" and self.selecao.time=="branco"):
-                #Se peça ainda não moveu, liberar duas casas
-                if(self.selecao.ja_moveu == False):
-                    #self.selecao.ja_moveu = True
-                    #Checando se há peças na linha -1
+
+    def movimento_bispo(self, inc_linha = 0, inc_coluna = 0):
+        if(inc_linha == 0 and inc_coluna == 0):
+            self.movimento_bispo( 1,  1)
+            self.movimento_bispo( 1, -1)
+            self.movimento_bispo(-1,  1)
+            self.movimento_bispo(-1, -1)
+        else:
+            i = self.selecao.linha + inc_linha
+            j = self.selecao.coluna + inc_coluna
+            while(i >= 0 and
+                  i < len(self.matriz) and
+                  j >= 0 and
+                  j < len(self.matriz[0])):
+                if(self.matriz[i][j] == "vazio"):
+                    disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), i,
+                                              j, False)
+                    self.matriz[i][j] = disponivel
+                    i = i + inc_linha
+                    j = j + inc_coluna
+                else:
+                    break
+
+
+    def movimento_peao(self):
+        # ---------------------------------> a partir daqui peoes brancos -------------------------------------------------------------------------------
+        if(self.selecao.time=="branco"):
+            #Se peça ainda não moveu, liberar duas casas
+            if(self.selecao.ja_moveu == False):
+                #self.selecao.ja_moveu = True
+                #Checando se há peças na linha -1
+                if(self.matriz[self.selecao.linha-1][self.selecao.coluna] == "vazio"):
+                    disponivel = Peca("disponivel",None,Sprite("Sprites/verde.png"),self.selecao.linha-1,self.selecao.coluna,False)
+                    self.matriz[self.selecao.linha-1][self.selecao.coluna] = disponivel
+                    #Checando se há peças na linha -2
+                    if(self.matriz[self.selecao.linha-2][self.selecao.coluna] == "vazio"):
+                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha -2,self.selecao.coluna,False)
+                        self.matriz[self.selecao.linha -2][self.selecao.coluna] = disponivel
+            #Se peça já moveu, liberar uma casa
+            if(self.selecao.ja_moveu == True):
+                #Checando se está saindo do tabuleiro!
+                if(self.selecao.linha-1 >= 0):
                     if(self.matriz[self.selecao.linha-1][self.selecao.coluna] == "vazio"):
                         disponivel = Peca("disponivel",None,Sprite("Sprites/verde.png"),self.selecao.linha-1,self.selecao.coluna,False)
                         self.matriz[self.selecao.linha-1][self.selecao.coluna] = disponivel
-                        #Checando se há peças na linha -2
-                        if(self.matriz[self.selecao.linha-2][self.selecao.coluna] == "vazio"):
-                            disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha -2,self.selecao.coluna,False)
-                            self.matriz[self.selecao.linha -2][self.selecao.coluna] = disponivel
-                #Se peça já moveu, liberar uma casa
-                if(self.selecao.ja_moveu == True):
-                    #Checando se está saindo do tabuleiro!
-                    if(self.selecao.linha-1 >= 0):
-                        if(self.matriz[self.selecao.linha-1][self.selecao.coluna] == "vazio"):
-                            disponivel = Peca("disponivel",None,Sprite("Sprites/verde.png"),self.selecao.linha-1,self.selecao.coluna,False)
-                            self.matriz[self.selecao.linha-1][self.selecao.coluna] = disponivel
-                    else:
-                        return
-                        #PROGRAMAR A TROCA DE PEÇAS!
+                else:
+                    return
+                    #PROGRAMAR A TROCA DE PEÇAS!
                 #Colorindo as peças que podem ser comidas
-                if self.selecao.linha-1 >= 0:
-                    if self.selecao.coluna+1 <= 7:
-                        if self.matriz[self.selecao.linha-1][self.selecao.coluna+1] != "vazio":
-                            return #pintar o alvo
-                    if self.selecao.coluna-1 >= 0:
-                        if self.matriz[self.selecao.linha-1][self.selecao.coluna-1] != "vazio":
-                            return #pintar o alvo
-
-
+            if self.selecao.linha-1 >= 0:
+                if self.selecao.coluna+1 <= 7:
+                    if self.matriz[self.selecao.linha-1][self.selecao.coluna+1] != "vazio":
+                        return #pintar o alvo
+                if self.selecao.coluna-1 >= 0:
+                    if self.matriz[self.selecao.linha-1][self.selecao.coluna-1] != "vazio":
+                        return #pintar o alvo
 # --------------------------------------------- a partir daqui para peos pretos -----------------------------------------------------------
-
-            if (self.selecao.tipo == "peao" and self.selecao.time == "preto"):
-                # Se peça ainda não moveu, liberar duas casas
-                if (self.selecao.ja_moveu == False):
-                    # Checando se há peças na linha +1
+        if (self.selecao.time == "preto"):
+            # Se peça ainda não moveu, liberar duas casas
+            if (self.selecao.ja_moveu == False):
+                # Checando se há peças na linha +1
+                if (self.matriz[self.selecao.linha + 1][self.selecao.coluna] == "vazio"):
+                    disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha + 1,
+                                      self.selecao.coluna, False)
+                    self.matriz[self.selecao.linha + 1][self.selecao.coluna] = disponivel
+                    # Checando se há peças na linha +2
+                    if (self.matriz[self.selecao.linha + 2][self.selecao.coluna] == "vazio"):
+                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha + 2,
+                                          self.selecao.coluna, False)
+                        self.matriz[self.selecao.linha + 2][self.selecao.coluna] = disponivel
+            # Se peça já moveu, liberar uma casa
+            if (self.selecao.ja_moveu == True):
+                # Checando se está saindo do tabuleiro!
+                if (self.selecao.linha + 1 < len(self.matriz)):
                     if (self.matriz[self.selecao.linha + 1][self.selecao.coluna] == "vazio"):
                         disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha + 1,
-                                          self.selecao.coluna, False)
+                                              self.selecao.coluna, False)
                         self.matriz[self.selecao.linha + 1][self.selecao.coluna] = disponivel
-                        # Checando se há peças na linha +2
-                        if (self.matriz[self.selecao.linha + 2][self.selecao.coluna] == "vazio"):
-                            disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha + 2,
-                                              self.selecao.coluna, False)
-                            self.matriz[self.selecao.linha + 2][self.selecao.coluna] = disponivel
-                # Se peça já moveu, liberar uma casa
-                if (self.selecao.ja_moveu == True):
-                    # Checando se está saindo do tabuleiro!
-                    if (self.selecao.linha + 1 < len(self.matriz)):
-                        if (self.matriz[self.selecao.linha + 1][self.selecao.coluna] == "vazio"):
-                            disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha + 1,
-                                              self.selecao.coluna, False)
-                            self.matriz[self.selecao.linha + 1][self.selecao.coluna] = disponivel
-                    else:
-                        return
-                        # PROGRAMAR A TROCA DE PEÇAS!
-                # Colorindo as peças que podem ser comidas
-                if self.selecao.linha + 1 < len(self.matriz):
-                    if self.selecao.coluna + 1 <= 7:
-                        if self.matriz[self.selecao.linha + 1][self.selecao.coluna + 1] != "vazio":
-                            return  # pintar o alvo
-                    if self.selecao.coluna - 1 >= 0:
-                        if self.matriz[self.selecao.linha + 1][self.selecao.coluna - 1] != "vazio":
-                            return  # pintar o alvo
+                else:
+                    return
+                    # PROGRAMAR A TROCA DE PEÇAS!
+            # Colorindo as peças que podem ser comidas
+            if self.selecao.linha + 1 < len(self.matriz):
+                if self.selecao.coluna + 1 <= 7:
+                    if self.matriz[self.selecao.linha + 1][self.selecao.coluna + 1] != "vazio":
+                        return  # pintar o alvo
+                if self.selecao.coluna - 1 >= 0:
+                    if self.matriz[self.selecao.linha + 1][self.selecao.coluna - 1] != "vazio":
+                        return  # pintar o alvo
 
+    def movimento_torre(self):
+        for i in range (self.selecao.linha-1, -1, -1):
+            if(self.matriz[i][self.selecao.coluna] == "vazio"):
+                disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), i,
+                                          self.selecao.coluna, False)
+                self.matriz[i][self.selecao.coluna] = disponivel
+            else:
+                break
+        for i in range(self.selecao.coluna+1, len(self.matriz[0])):
+            if(self.matriz[self.selecao.linha][i] == "vazio"):
+                disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha,
+                                      i, False)
+                self.matriz[self.selecao.linha][i] = disponivel
+            else:
+                break  
+        for i in range (self.selecao.linha+1, len(self.matriz)):
+            if(self.matriz[i][self.selecao.coluna] == "vazio"):
+                disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), i,
+                                         self.selecao.coluna, False)
+                self.matriz[i][self.selecao.coluna] = disponivel
+            else:
+                break
+        for i in range(self.selecao.coluna-1, -1, -1):
+            if(self.matriz[self.selecao.linha][i] == "vazio"):
+                disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha,
+                                              i, False)
+                self.matriz[self.selecao.linha][i] = disponivel
+            else:
+                break 
 
-# --------------------------------------------- a partir daqui para torre----------------------------------------------------------------
+    def movimento_rei(self, linha, coluna):
+        if(linha == self.selecao.linha and coluna == self.selecao.coluna):
+            self.movimento_rei(linha, coluna + 1)
+            self.movimento_rei(linha, coluna - 1)
+            self.movimento_rei(linha + 1, coluna)
+            self.movimento_rei(linha + 1, coluna + 1)
+            self.movimento_rei(linha + 1, coluna - 1)
+            self.movimento_rei(linha - 1, coluna)
+            self.movimento_rei(linha - 1, coluna + 1)
+            self.movimento_rei(linha - 1, coluna - 1)
+        else:
+            if(linha >= 0 and linha < len(self.matriz) and coluna >=0 and coluna < len(self.matriz[0])):
+                if(self.matriz[linha][coluna] == "vazio"):
+                    disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), linha,
+                                                  coluna, False)
+                    self.matriz[linha][coluna] = disponivel
+
+    def movimento_cavalo(self, inc_linha = 0, inc_coluna = 0):
+        if(inc_linha == 0 and inc_coluna == 0):
+            self.movimento_cavalo( 1,  2)
+            self.movimento_cavalo( 1, -2)
+            self.movimento_cavalo(-1,  2)
+            self.movimento_cavalo(-1, -2)
+            self.movimento_cavalo( 2,  1)
+            self.movimento_cavalo( 2, -1)
+            self.movimento_cavalo(-2,  1)
+            self.movimento_cavalo(-2, -1)
+        else:
+            i = self.selecao.linha + inc_linha
+            j = self.selecao.coluna + inc_coluna
+            if(i >= 0 and
+               i < len(self.matriz) and
+               j >= 0 and
+               j < len(self.matriz[0])):
+                if(self.matriz[i][j] == "vazio"):
+                    disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), i,
+                                                  j, False)
+                    self.matriz[i][j] = disponivel
+
+    def defineDisponiveis(self):
+        if (self.selecao!=None):
+            
+            if(self.selecao.tipo == "peao"):
+                self.movimento_peao()
+            
             if(self.selecao.tipo == "torre"):
-                for i in range (self.selecao.linha-1, -1, -1):
-                    if(self.matriz[i][self.selecao.coluna] == "vazio"):
-                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), i,
-                                              self.selecao.coluna, False)
-                        self.matriz[i][self.selecao.coluna] = disponivel
-                    else:
-                        break
-                for i in range(self.selecao.coluna+1, len(self.matriz[0])):
-                    if(self.matriz[self.selecao.linha][i] == "vazio"):
-                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha,
-                                              i, False)
-                        self.matriz[self.selecao.linha][i] = disponivel
-                    else:
-                        break  
-                for i in range (self.selecao.linha+1, len(self.matriz)):
-                    if(self.matriz[i][self.selecao.coluna] == "vazio"):
-                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), i,
-                                              self.selecao.coluna, False)
-                        self.matriz[i][self.selecao.coluna] = disponivel
-                    else:
-                        break
-                for i in range(self.selecao.coluna-1, -1, -1):
-                    if(self.matriz[self.selecao.linha][i] == "vazio"):
-                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha,
-                                              i, False)
-                        self.matriz[self.selecao.linha][i] = disponivel
-                    else:
-                        break  
+                self.movimento_torre()
 
-# --------------------------------------------- a partir daqui para cavalo----------------------------------------------------------------
+            if(self.selecao.tipo == "bispo"):
+                self.movimento_bispo()
+
+            if(self.selecao.tipo == "rei"):
+                self.movimento_rei(self.selecao.linha, self.selecao.coluna)
+
+            if(self.selecao.tipo == "rainha"):
+                self.movimento_bispo()
+                self.movimento_torre()
+
             if(self.selecao.tipo == "cavalo"):
-                lm1 = self.selecao.linha - 1
-                lm2 = self.selecao.linha - 2
-                lM1 = self.selecao.linha + 1
-                lM2 = self.selecao.linha + 2
-                cm1 = self.selecao.coluna - 1
-                cm2 = self.selecao.coluna - 2
-                cM1 = self.selecao.coluna + 1
-                cM2 = self.selecao.coluna + 2
-                if(lM1 < len(self.matriz)):
-                    if(cM2 < len(self.matriz[lM1]) and self.matriz[lM1][cM2] == "vazio"):
-                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lM1,
-                                              cM2, False)
-                        self.matriz[lM1][cM2] = disponivel
-                    if(cm2 >= 0 and self.matriz[lM1][cm2] == "vazio"):
-                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lM1,
-                                              cm2, False)
-                        self.matriz[lM1][cm2] = disponivel
-                if(lm1 >= 0):
-                    if(cM2 < len(self.matriz[lm1]) and self.matriz[lm1][cM2] == "vazio"):
-                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lm1,
-                                              cM2, False)
-                        self.matriz[lm1][cM2] = disponivel
-                    if(cm2 >= 0 and self.matriz[lm1][cm2] == "vazio"):
-                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lm1,
-                                              cm2, False)
-                        self.matriz[lm1][cm2] = disponivel
-                if (lM2 < len(self.matriz) ):
-                    if(cM1 < len(self.matriz[lM2]) and self.matriz[lM2][cM1] == "vazio"):
-                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lM2,
-                                              cM1, False)
-                        self.matriz[lM2][cM1] = disponivel
-                    if(cm1 >= 0 and self.matriz[lM2][cm1] == "vazio"):
-                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lM2,
-                                              cm1, False)
-                        self.matriz[lM2][cm1] = disponivel
-                if(lm2 >= 0):
-                    if(cM1 < len(self.matriz[lm2]) and self.matriz[lm2][cM1] == "vazio"):
-                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lm2,
-                                              cM1, False)
-                        self.matriz[lm2][cM1] = disponivel
-                    if(cm1 >= 0 and self.matriz[lm2][cm1] == "vazio"):
-                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lm2,
-                                              cm1, False)
-                        self.matriz[lm2][cm1] = disponivel
+                self.movimento_cavalo()
+
+          
 
     def confirmaMovimento(self):
         update = False
