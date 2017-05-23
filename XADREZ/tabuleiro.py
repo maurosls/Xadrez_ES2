@@ -184,6 +184,7 @@ class Tabuleiro:
                         if self.matriz[self.selecao.linha + 1][self.selecao.coluna - 1] != "vazio":
                             return  # pintar o alvo
 
+
 # --------------------------------------------- a partir daqui para torre----------------------------------------------------------------
             if(self.selecao.tipo == "torre"):
                 for i in range (self.selecao.linha-1, -1, -1):
@@ -215,6 +216,52 @@ class Tabuleiro:
                     else:
                         break  
 
+# --------------------------------------------- a partir daqui para cavalo----------------------------------------------------------------
+            if(self.selecao.tipo == "cavalo"):
+                lm1 = self.selecao.linha - 1
+                lm2 = self.selecao.linha - 2
+                lM1 = self.selecao.linha + 1
+                lM2 = self.selecao.linha + 2
+                cm1 = self.selecao.coluna - 1
+                cm2 = self.selecao.coluna - 2
+                cM1 = self.selecao.coluna + 1
+                cM2 = self.selecao.coluna + 2
+                if(lM1 < len(self.matriz)):
+                    if(cM2 < len(self.matriz[lM1]) and self.matriz[lM1][cM2] == "vazio"):
+                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lM1,
+                                              cM2, False)
+                        self.matriz[lM1][cM2] = disponivel
+                    if(cm2 >= 0 and self.matriz[lM1][cm2] == "vazio"):
+                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lM1,
+                                              cm2, False)
+                        self.matriz[lM1][cm2] = disponivel
+                if(lm1 >= 0):
+                    if(cM2 < len(self.matriz[lm1]) and self.matriz[lm1][cM2] == "vazio"):
+                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lm1,
+                                              cM2, False)
+                        self.matriz[lm1][cM2] = disponivel
+                    if(cm2 >= 0 and self.matriz[lm1][cm2] == "vazio"):
+                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lm1,
+                                              cm2, False)
+                        self.matriz[lm1][cm2] = disponivel
+                if (lM2 < len(self.matriz) ):
+                    if(cM1 < len(self.matriz[lM2]) and self.matriz[lM2][cM1] == "vazio"):
+                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lM2,
+                                              cM1, False)
+                        self.matriz[lM2][cM1] = disponivel
+                    if(cm1 >= 0 and self.matriz[lM2][cm1] == "vazio"):
+                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lM2,
+                                              cm1, False)
+                        self.matriz[lM2][cm1] = disponivel
+                if(lm2 >= 0):
+                    if(cM1 < len(self.matriz[lm2]) and self.matriz[lm2][cM1] == "vazio"):
+                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lm2,
+                                              cM1, False)
+                        self.matriz[lm2][cM1] = disponivel
+                    if(cm1 >= 0 and self.matriz[lm2][cm1] == "vazio"):
+                        disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), lm2,
+                                              cm1, False)
+                        self.matriz[lm2][cm1] = disponivel
 
     def confirmaMovimento(self):
         update = False
