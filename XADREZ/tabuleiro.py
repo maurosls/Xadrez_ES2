@@ -22,9 +22,44 @@ class Tabuleiro:
 
 
     def __init__(self):
-        self.janela = Window(600,600)
+        self.janela = Window(1050, 600)
         self.mouse = self.janela.get_mouse()
 
+        pygame.display.set_caption("Trabalho ---- ES2") # Coloca titulo no trabalho
+
+# interface grafica do jogo referente ao tempo e troca de turno -----------------------------------------------------------------------
+
+        self.spritevez = Sprite("Sprites/vezdo.png")
+        self.spritevez.x = 670
+        self.spritevez.y = 250
+
+        self.ppreta = Sprite("Sprites/ppreta.png")
+        self.ppreta.x = 800
+        self.ppreta.y = 330
+
+        self.pbranca = Sprite("Sprites/pbranco.png")
+        self.pbranca.x = 800
+        self.pbranca.y = 380
+
+        self.apontaj = Sprite("Sprites/apontaj.png")
+        self.apontaj.x = 730
+        self.apontaj.y = 380
+
+        self.tempoj = Sprite("Sprites/tempoj.png")
+        self.tempoj.x = 670
+        self.tempoj.y = 450
+
+        self.tempot = Sprite("Sprites/tempot.png")
+        self.tempot.x = 670
+        self.tempot.y = 530
+
+        self.tempoIni = pygame.time.get_ticks()
+        self.tempoInij = pygame.time.get_ticks()
+
+        self.efeito3d = Sprite("Sprites/efeito3d.png")
+        self.efeito3d.x = 600
+        self.efeito3d.y = 0
+#-------------------------------------------------------------------------------------------------------------------------------------------------
         self.casas = []
         self.tamanhoSprite = 75
         cor = "preto"
@@ -47,6 +82,21 @@ class Tabuleiro:
         self.selecaoSprite = Sprite("Sprites/selecao.png")
         self.selecaoSprite.x = self.janela.width
         self.selecaoSprite.y = self.janela.height
+
+# método para verificar o tempo do jogo ---------------------------------------------------------------------------------------------------------
+
+    def timerG(self, start, end):
+        self.hours, self.rem = divmod(end/1000 - start/1000,3600)
+        self.minutes, self.seconds = divmod(self.rem, 60)
+        self.stringResp = "{:0>2}:{:0>2}:{:05.2f}".format(int(self.hours), int(self.minutes), self.seconds)
+        self.janela.draw_text(self.stringResp, 900, self.tempot.y, 30, (8, 8, 8))
+
+# metodo para verificar o tempo de 1 jogada ------------------------------------------------------------------------------------------------------------------
+    def timerJ(self, start, end):
+        self.hours, self.rem = divmod(end/1000 - start/1000, 3600)
+        self.minutes, self.seconds = divmod(self.rem, 60)
+        self.stringResp = "{:0>2}:{:0>2}:{:05.2f}".format(int(self.hours), int(self.minutes), self.seconds)
+        self.janela.draw_text(self.stringResp, 900, self.tempoj.y, 30, (8, 8, 8))
 
     def inicializaMatriz(self):
         torreP1 = Peca("torre", "preto", Sprite("Sprites/torreP.png"),0,0,False)
@@ -334,8 +384,14 @@ class Tabuleiro:
                 self.selecao.ja_moveu = True
             if(self.rodada == "branco"):
                 self.rodada = "preto"
+                # toda vez que troca a jogada o tempo zera e a seta muda
+                self.apontaj.y = self.ppreta.y
+                self.tempoInij = pygame.time.get_ticks()
             else:
                 self.rodada = "branco"
+                # toda vez que troca a jogada o tempo zera e a seta muda
+                self.apontaj.y = self.pbranca.y
+                self.tempoInij = pygame.time.get_ticks()
             self.selecao = None
             self.selecaoSprite.x=self.janela.width
             self.selecaoSprite.y=self.janela.height
@@ -347,6 +403,7 @@ class Tabuleiro:
                             self.matriz[x][y] = "vazio"
 
     def atualiza(self):
+        self.janela.set_background_color(16777215)
         for i in range(0, len(self.casas)):
             self.casas[i].draw()
 
@@ -357,7 +414,15 @@ class Tabuleiro:
                     self.matriz[i][j].sprite.y = i * self.tamanhoSprite
                     self.matriz[i][j].sprite.draw()
 
-
+        self.efeito3d.draw()
+        self.spritevez.draw()
+        self.ppreta.draw()
+        self.pbranca.draw()
+        self.apontaj.draw()
+        self.tempoj.draw()
+        self.tempot.draw()
+        self.timerG(self.tempoIni, pygame.time.get_ticks())
+        self.timerJ(self.tempoInij, pygame.time.get_ticks())
         self.selecaoSprite.draw()
 
         self.janela.update()

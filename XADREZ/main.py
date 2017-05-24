@@ -6,6 +6,7 @@ from PPlay.sprite import *
 janela = Window(800, 600)
 resp = True
 mouse =  janela.get_mouse()
+pygame.display.set_caption("Trabalho ---- ES2")
 
 botao1j = Sprite("Sprites/botao1j.png")
 botao1j.x= 100
