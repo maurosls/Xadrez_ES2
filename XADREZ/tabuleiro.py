@@ -16,6 +16,8 @@ class Tabuleiro:
     casas = None
     selecao = None
 
+    rodada = None
+
     matriz = None
 
 
@@ -41,7 +43,7 @@ class Tabuleiro:
                 cor = "branco"
             else:
                 cor = "preto"
-
+        self.rodada = "branco"
         self.selecaoSprite = Sprite("Sprites/selecao.png")
         self.selecaoSprite.x = self.janela.width
         self.selecaoSprite.y = self.janela.height
@@ -290,8 +292,8 @@ class Tabuleiro:
                     self.matriz[i][j] = disponivel
 
     def defineDisponiveis(self):
-        if (self.selecao!=None):
-            
+        if (self.selecao!=None and self.selecao.time == self.rodada):
+
             if(self.selecao.tipo == "peao"):
                 self.movimento_peao()
             
@@ -330,6 +332,10 @@ class Tabuleiro:
             self.matriz[disponivelSelecionado.linha][disponivelSelecionado.coluna] = self.selecao
             if (self.selecao.tipo=="peao"):
                 self.selecao.ja_moveu = True
+            if(self.rodada == "branco"):
+                self.rodada = "preto"
+            else:
+                self.rodada = "branco"
             self.selecao = None
             self.selecaoSprite.x=self.janela.width
             self.selecaoSprite.y=self.janela.height
