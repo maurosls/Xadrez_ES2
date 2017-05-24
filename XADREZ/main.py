@@ -1,7 +1,7 @@
 from tabuleiro import *
 from PPlay.window import *
 from PPlay.sprite import *
-
+import ctypes
 
 janela = Window(800, 600)
 resp = True
@@ -41,11 +41,17 @@ while resp:
     botaoreg.draw()
     botaotit.draw()
     imagemtab.draw()
-    if(mouse.is_button_pressed(1) and mouse.is_over_object(botao1j) or
-        mouse.is_button_pressed(1) and mouse.is_over_object(botao2j) or
-        mouse.is_button_pressed(1) and mouse.is_over_object(botaopc)):
+    if(mouse.is_button_pressed(1) and mouse.is_over_object(botao1j)):
+        ctypes.windll.user32.MessageBoxW(0, "Modo de Jogo não Disponível!", "AVISO!", 0)
+        #resp = False
+        #janela.delay(500)
+    elif(mouse.is_button_pressed(1) and mouse.is_over_object(botao2j)):
         resp = False
         janela.delay(500)
+    elif(mouse.is_button_pressed(1) and mouse.is_over_object(botaopc)):
+        ctypes.windll.user32.MessageBoxW(0, "Modo de Jogo não Disponível!", "AVISO!", 0)
+        #resp = False
+        #janela.delay(500)
 
 
 

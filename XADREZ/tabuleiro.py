@@ -22,7 +22,7 @@ class Tabuleiro:
 
 
     def __init__(self):
-        self.janela = Window(1050, 600)
+        self.janela = Window(1100, 600)
         self.mouse = self.janela.get_mouse()
 
         pygame.display.set_caption("Trabalho ---- ES2") # Coloca titulo no trabalho
