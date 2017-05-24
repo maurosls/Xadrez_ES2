@@ -113,8 +113,9 @@ class Tabuleiro:
                         self.selecaoSprite.y = self.matriz[i][j].sprite.y
                         self.selecao = self.matriz[i][j]
 
-
-
+#----Função que implementa a movimentação do bispo.
+#----Se assemelha com a implementação do rei e do cavalo.
+#----No if, os argumentos são as direções de verificação.
     def movimento_bispo(self, inc_linha = 0, inc_coluna = 0):
         if(inc_linha == 0 and inc_coluna == 0):
             self.movimento_bispo( 1,  1)
@@ -124,10 +125,11 @@ class Tabuleiro:
         else:
             i = self.selecao.linha + inc_linha
             j = self.selecao.coluna + inc_coluna
-            while(i >= 0 and
-                  i < len(self.matriz) and
-                  j >= 0 and
-                  j < len(self.matriz[0])):
+            while(i >= 0 and                                
+                  i < len(self.matriz) and                  
+                  j >= 0 and                                # condição que verifica se as posições i e j 
+                  j < len(self.matriz[0])):                 # continuam dentro do tabuleiro
+               
                 if(self.matriz[i][j] == "vazio"):
                     disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), i,
                                               j, False)
@@ -204,7 +206,11 @@ class Tabuleiro:
                     if self.matriz[self.selecao.linha + 1][self.selecao.coluna - 1] != "vazio":
                         return  # pintar o alvo
 
+#----Função que implementa a movimentação da torre.
+#----Cada "for" resolve uma direção calculando os limites.
+#----Caso encontre uma peça ou esteja no fim do tabuleiro ele sai do loop.
     def movimento_torre(self):
+        #---for decremental: calcula todas as posições a cima da torre 
         for i in range (self.selecao.linha-1, -1, -1):
             if(self.matriz[i][self.selecao.coluna] == "vazio"):
                 disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), i,
@@ -212,6 +218,7 @@ class Tabuleiro:
                 self.matriz[i][self.selecao.coluna] = disponivel
             else:
                 break
+        #---for incremental: calcula todas as posições a direita da torre
         for i in range(self.selecao.coluna+1, len(self.matriz[0])):
             if(self.matriz[self.selecao.linha][i] == "vazio"):
                 disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha,
@@ -219,6 +226,7 @@ class Tabuleiro:
                 self.matriz[self.selecao.linha][i] = disponivel
             else:
                 break  
+        #---for incremental: calcula todas as posições a baixo da torre
         for i in range (self.selecao.linha+1, len(self.matriz)):
             if(self.matriz[i][self.selecao.coluna] == "vazio"):
                 disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), i,
@@ -226,6 +234,7 @@ class Tabuleiro:
                 self.matriz[i][self.selecao.coluna] = disponivel
             else:
                 break
+        #---for decremental: calcula todas as posições a esquerda da torre
         for i in range(self.selecao.coluna-1, -1, -1):
             if(self.matriz[self.selecao.linha][i] == "vazio"):
                 disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha,
@@ -234,6 +243,11 @@ class Tabuleiro:
             else:
                 break 
 
+#----Função que implementa a movimentação do rei
+#----de uma forma que se parece com uma recursão.
+#----Caso os parâmetros sejam 0, ele inicia o calculo
+#----para todas as possibilidades de movimentos do rei,
+#----fiz isso para evitar repetição de "if's".
     def movimento_rei(self, linha, coluna):
         if(linha == self.selecao.linha and coluna == self.selecao.coluna):
             self.movimento_rei(linha, coluna + 1)
@@ -251,6 +265,8 @@ class Tabuleiro:
                                                   coluna, False)
                     self.matriz[linha][coluna] = disponivel
 
+#----Função que implementa a movimentação do cavalo.
+#----Se assemelha com a implementação da movimentação do rei.
     def movimento_cavalo(self, inc_linha = 0, inc_coluna = 0):
         if(inc_linha == 0 and inc_coluna == 0):
             self.movimento_cavalo( 1,  2)
