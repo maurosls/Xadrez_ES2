@@ -64,5 +64,6 @@ while True:
     tab.atualiza()
     tab.selecionaPeca()
     tab.defineDisponiveis()
+    tab.defineAlvos()
     tab.atualiza()
     tab.confirmaMovimento()

@@ -13,6 +13,8 @@ class Tabuleiro:
     verde = None
     selecaoSprite = None
 
+    pretasComidas = []
+    brancasComidas = []
     casas = None
     selecao = None
 
@@ -160,6 +162,9 @@ class Tabuleiro:
                                 if (self.matriz[x][y] != "vazio"):
                                     if(self.matriz[x][y].tipo == "disponivel"):
                                         self.matriz[x][y] = "vazio"
+                                    elif(self.matriz[x][y].alvo == True):
+                                        self.matriz[x][y].alvo = False
+                                        self.matriz[x][y].sprite = self.matriz[x][y].spriteBackup
                         self.janela.update()
                         self.selecaoSprite.x = self.matriz[i][j].sprite.x
                         self.selecaoSprite.y = self.matriz[i][j].sprite.y
@@ -341,12 +346,12 @@ class Tabuleiro:
                                                   j, False)
                     self.matriz[i][j] = disponivel
 
+
     def defineDisponiveis(self):
         if (self.selecao!=None and self.selecao.time == self.rodada):
 
             if(self.selecao.tipo == "peao"):
                 self.movimento_peao()
-            
             if(self.selecao.tipo == "torre"):
                 self.movimento_torre()
 
@@ -363,25 +368,79 @@ class Tabuleiro:
             if(self.selecao.tipo == "cavalo"):
                 self.movimento_cavalo()
 
-          
+    def defineAlvos(self):
+        if(self.selecao != None):
+            if(self.selecao.time == self.rodada):
+                if(self.selecao.tipo == "peao"):
+                    if(self.rodada == "branco"):
+                        lin = self.selecao.linha - 1;
+                        colD = self.selecao.coluna + 1;
+                        colE = self.selecao.coluna - 1;
+                    if(self.rodada == "preto"):
+                        lin = self.selecao.linha + 1;
+                        colD = self.selecao.coluna + 1;
+                        colE = self.selecao.coluna - 1;
+                    if(lin >= 0  and lin < len(self.matriz[0])):
+                        if(colD < len(self.matriz[0])):
+                            if(self.matriz[lin][colD] != "vazio"):
+                                if(self.matriz[lin][colD].time != self.rodada):
+                                    self.matriz[lin][colD].alvo = True
+                        if(colE > 0):
+                            if(self.matriz[lin][colE] != "vazio"):
+                                if(self.matriz[lin][colE].time != self.rodada):
+                                    self.matriz[lin][colE].alvo = True
+                if(self.selecao.tipo == "torre"):
+                    True
+
+                if(self.selecao.tipo == "bispo"):
+                    True
+                if(self.selecao.tipo == "rei"):
+                    True
+
+                if(self.selecao.tipo == "rainha"):
+                    True
+
+                if(self.selecao.tipo == "cavalo"):
+                    True
+
 
     def confirmaMovimento(self):
-        update = False
-        disponivelSelecionado = None
+        updateMov = False
+        updateAlvo = False
+        acao = None
         for i in range(0,len(self.matriz)):
             for j in range(0, len(self.matriz[0])):
                 if (self.matriz[i][j]!="vazio"):
-                    while (self.mouse.is_button_pressed(1) and self.mouse.is_over_object(self.matriz[i][j].sprite) and self.matriz[i][j].tipo=="disponivel"):
+                    while ((self.mouse.is_button_pressed(1) and self.mouse.is_over_object(self.matriz[i][j].sprite) and self.matriz[i][j].tipo=="disponivel")
+                           or (self.mouse.is_button_pressed(1) and self.mouse.is_over_object(self.matriz[i][j].sprite) and self.matriz[i][j].alvo == True)):
                         self.janela.update()
-                        update = True
-                        disponivelSelecionado = self.matriz[i][j]
-        if (update==True):
-            self.matriz[self.selecao.linha][self.selecao.coluna] = "vazio"
-            self.selecao.linha = disponivelSelecionado.linha
-            self.selecao.coluna = disponivelSelecionado.coluna
-            self.matriz[disponivelSelecionado.linha][disponivelSelecionado.coluna] = self.selecao
-            if (self.selecao.tipo=="peao"):
-                self.selecao.ja_moveu = True
+                        if(self.matriz[i][j].tipo=="disponivel"):
+                            updateMov = True
+
+                        elif(self.matriz[i][j].alvo == True):
+                            updateAlvo = True
+
+                        acao = self.matriz[i][j]
+
+        if (updateMov==True or updateAlvo==True):
+            if(updateMov==True):
+                self.matriz[self.selecao.linha][self.selecao.coluna] = "vazio"
+                self.selecao.linha = acao.linha
+                self.selecao.coluna = acao.coluna
+                self.matriz[acao.linha][acao.coluna] = self.selecao
+                if (self.selecao.tipo=="peao"):
+                    self.selecao.ja_moveu = True
+
+            elif(updateAlvo==True):
+                if(self.matriz[acao.linha][acao.coluna].time == "branco"):
+                    self.brancasComidas.append(self.matriz[acao.linha][acao.coluna])
+                if(self.matriz[acao.linha][acao.coluna].time == "preto"):
+                    self.pretasComidas.append(self.matriz[acao.linha][acao.coluna])
+                self.matriz[self.selecao.linha][self.selecao.coluna] = "vazio"
+                self.selecao.linha = acao.linha
+                self.selecao.coluna = acao.coluna
+                self.matriz[acao.linha][acao.coluna] = self.selecao
+
             if(self.rodada == "branco"):
                 self.rodada = "preto"
                 # toda vez que troca a jogada o tempo zera e a seta muda
@@ -401,6 +460,10 @@ class Tabuleiro:
                     if (self.matriz[x][y] != "vazio"):
                         if (self.matriz[x][y].tipo == "disponivel"):
                             self.matriz[x][y] = "vazio"
+                        elif(self.matriz[x][y].alvo == True):
+                            self.matriz[x][y].alvo = False
+                            self.matriz[x][y].sprite = self.matriz[x][y].spriteBackup
+
 
     def atualiza(self):
         self.janela.set_background_color(16777215)
@@ -410,6 +473,9 @@ class Tabuleiro:
         for i in range(0,len(self.matriz)):
             for j in range(0,len(self.matriz[0])):
                 if (self.matriz[i][j]!= "vazio"):
+                    if(self.matriz[i][j].alvo == True):
+                        self.matriz[i][j].sprite = Sprite("Sprites/vermelho.png")
+
                     self.matriz[i][j].sprite.x = j * self.tamanhoSprite
                     self.matriz[i][j].sprite.y = i * self.tamanhoSprite
                     self.matriz[i][j].sprite.draw()
