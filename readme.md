@@ -10,8 +10,6 @@ TODO: Como dar deploy
 
 Este projeto requer o uso da biblioteca PPLAY, encontrado em http://www2.ic.uff.br/pplay/
 
-```
-
 ## TODO: Testes
 
 Explain how to run the automated tests for this system
@@ -19,11 +17,6 @@ Explain how to run the automated tests for this system
 ### Break down into end to end tests
 
 Explain what these tests test and why
-
-```
-Give an example
-```
-
 
 ## Executando
 
