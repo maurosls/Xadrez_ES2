@@ -5,8 +5,8 @@ import ctypes
 
 janela = Window(800, 600)
 resp = True
-mouse =  janela.get_mouse()
-pygame.display.set_caption("Trabalho ---- ES2")
+mouse = janela.get_mouse()
+pygame.display.set_caption("Xadrez ES2 ")
 
 botao1j = Sprite("Sprites/botao1j.png")
 botao1j.x= 100
@@ -16,40 +16,40 @@ botao2j = Sprite("Sprites/botao2j.png")
 botao2j.x= 100
 botao2j.y= 300
 
-botaopc = Sprite("Sprites/botaopc.png")
-botaopc.x= 100
-botaopc.y= 400
+botaoPC = Sprite("Sprites/botaopc.png")
+botaoPC.x= 100
+botaoPC.y= 400
 
-botaoreg = Sprite("Sprites/botaoreg.png")
-botaoreg.x= 100
-botaoreg.y= 500
+botaoRegras = Sprite("Sprites/botaoreg.png")
+botaoRegras.x= 100
+botaoRegras.y= 500
 
-botaotit = Sprite("Sprites/nomej.png")
-botaotit.x= 100
-botaotit.y= 80
+imagemTitulo = Sprite("Sprites/nomej.png")
+imagemTitulo.x= 100
+imagemTitulo.y= 80
 
-imagemtab = Sprite("Sprites/imagemtab.png")
-imagemtab.x= 350
-imagemtab.y= 330
+imagemTabuleiro = Sprite("Sprites/imagemtab.png")
+imagemTabuleiro.x= 350
+imagemTabuleiro.y= 330
 
 
 while resp:
     janela.update()
     botao1j.draw()
     botao2j.draw()
-    botaopc.draw()
-    botaoreg.draw()
-    botaotit.draw()
-    imagemtab.draw()
+    botaoPC.draw()
+    botaoRegras.draw()
+    imagemTitulo.draw()
+    imagemTabuleiro.draw()
     if(mouse.is_button_pressed(1) and mouse.is_over_object(botao1j)):
-        ctypes.windll.user32.MessageBoxW(0, "Modo de Jogo não Disponível!", "AVISO!", 0)
+        ctypes.windll.user32.MessageBoxW(0, "Modo de Jogo não Disponível!", "Aviso!", 0)
         #resp = False
         #janela.delay(500)
     elif(mouse.is_button_pressed(1) and mouse.is_over_object(botao2j)):
         resp = False
-        janela.delay(500)
-    elif(mouse.is_button_pressed(1) and mouse.is_over_object(botaopc)):
-        ctypes.windll.user32.MessageBoxW(0, "Modo de Jogo não Disponível!", "AVISO!", 0)
+        janela.delay(300)
+    elif(mouse.is_button_pressed(1) and mouse.is_over_object(botaoPC)):
+        ctypes.windll.user32.MessageBoxW(0, "Modo de Jogo não Disponível!", "Aviso!", 0)
         #resp = False
         #janela.delay(500)
 
