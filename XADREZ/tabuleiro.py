@@ -177,6 +177,68 @@ class Tabuleiro:
 #----Função que implementa a movimentação do bispo.
 #----Se assemelha com a implementação do rei e do cavalo.
 #----No if, os argumentos são as direções de verificação.
+
+    def defineDisponiveis(self):
+        if (self.selecao!=None and self.selecao.cor == self.rodada):
+
+            if(self.selecao.tipo == "peao"):
+                self.movimento_peao()
+            if(self.selecao.tipo == "torre"):
+                self.movimento_torre()
+
+            if(self.selecao.tipo == "bispo"):
+                self.movimento_bispo()
+
+            if(self.selecao.tipo == "rei"):
+                self.movimento_rei(self.selecao.linha, self.selecao.coluna)
+
+            if(self.selecao.tipo == "rainha"):
+                self.movimento_bispo()
+                self.movimento_torre()
+
+            if(self.selecao.tipo == "cavalo"):
+                self.movimento_cavalo()
+
+    def defineAlvos(self):
+
+            if (self.selecao != None):
+                # definindo os alvos do peao -------------------------------------------------------------------
+
+                if (self.selecao.cor == self.rodada):
+                    if (self.selecao.tipo == "peao"):
+                        if (self.rodada == "branco"):
+                            lin = self.selecao.linha - 1;
+                            colD = self.selecao.coluna + 1;
+                            colE = self.selecao.coluna - 1;
+                        if (self.rodada == "preto"):
+                            lin = self.selecao.linha + 1;
+                            colD = self.selecao.coluna + 1;
+                            colE = self.selecao.coluna - 1;
+                        if (lin >= 0 and lin < len(self.matriz[0])):
+                            if (colD < len(self.matriz[0])):
+                                if (self.matriz[lin][colD] != "vazio"):
+                                    if (self.matriz[lin][colD].cor != self.rodada):
+                                        self.matriz[lin][colD].alvo = True
+                            if (colE > 0):
+                                if (self.matriz[lin][colE] != "vazio"):
+                                    if (self.matriz[lin][colE].cor != self.rodada):
+                                        self.matriz[lin][colE].alvo = True
+                                        # definindo os alvos da torre -------------------------------------------------------------------
+                    if (self.selecao.tipo == "torre"):
+                        True
+                        # definindo os alvos do bispo -------------------------------------------------------------------
+                    if (self.selecao.tipo == "bispo"):
+                        True
+                        # definindo os alvos do rei -------------------------------------------------------------------
+                    if (self.selecao.tipo == "rei"):
+                        True
+                        # definindo os alvos da rainha -------------------------------------------------------------------
+                    if (self.selecao.tipo == "rainha"):
+                        True
+                        # definindo os alvos do cavalo -------------------------------------------------------------------
+                    if (self.selecao.tipo == "cavalo"):
+                        True
+
     def movimento_bispo(self, inc_linha = 0, inc_coluna = 0):
         if(inc_linha == 0 and inc_coluna == 0):
             self.movimento_bispo( 1,  1)
@@ -199,7 +261,6 @@ class Tabuleiro:
                     j = j + inc_coluna
                 else:
                     break
-
 
     def movimento_peao(self):
         # ---------------------------------> a partir daqui peoes brancos -------------------------------------------------------------------------------
@@ -270,6 +331,7 @@ class Tabuleiro:
 #----Função que implementa a movimentação da torre.
 #----Cada "for" resolve uma direção calculando os limites.
 #----Caso encontre uma peça ou esteja no fim do tabuleiro ele sai do loop.
+
     def movimento_torre(self):
         #---for decremental: calcula todas as posições a cima da torre 
         for i in range (self.selecao.linha-1, -1, -1):
@@ -309,6 +371,7 @@ class Tabuleiro:
 #----Caso os parâmetros sejam 0, ele inicia o calculo
 #----para todas as possibilidades de movimentos do rei,
 #----fiz isso para evitar repetição de "if's".
+
     def movimento_rei(self, linha, coluna):
         if(linha == self.selecao.linha and coluna == self.selecao.coluna):
             self.movimento_rei(linha, coluna + 1)
@@ -328,6 +391,7 @@ class Tabuleiro:
 
 #----Função que implementa a movimentação do cavalo.
 #----Se assemelha com a implementação da movimentação do rei.
+
     def movimento_cavalo(self, inc_linha = 0, inc_coluna = 0):
         if(inc_linha == 0 and inc_coluna == 0):
             self.movimento_cavalo( 1,  2)
@@ -349,64 +413,6 @@ class Tabuleiro:
                     disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), i,
                                                   j, False)
                     self.matriz[i][j] = disponivel
-
-
-    def defineDisponiveis(self):
-        if (self.selecao!=None and self.selecao.cor == self.rodada):
-
-            if(self.selecao.tipo == "peao"):
-                self.movimento_peao()
-            if(self.selecao.tipo == "torre"):
-                self.movimento_torre()
-
-            if(self.selecao.tipo == "bispo"):
-                self.movimento_bispo()
-
-            if(self.selecao.tipo == "rei"):
-                self.movimento_rei(self.selecao.linha, self.selecao.coluna)
-
-            if(self.selecao.tipo == "rainha"):
-                self.movimento_bispo()
-                self.movimento_torre()
-
-            if(self.selecao.tipo == "cavalo"):
-                self.movimento_cavalo()
-
-    def defineAlvos(self):
-        if(self.selecao != None):
-            if(self.selecao.cor == self.rodada):
-                if(self.selecao.tipo == "peao"):
-                    if(self.rodada == "branco"):
-                        lin = self.selecao.linha - 1;
-                        colD = self.selecao.coluna + 1;
-                        colE = self.selecao.coluna - 1;
-                    if(self.rodada == "preto"):
-                        lin = self.selecao.linha + 1;
-                        colD = self.selecao.coluna + 1;
-                        colE = self.selecao.coluna - 1;
-                    if(lin >= 0  and lin < len(self.matriz[0])):
-                        if(colD < len(self.matriz[0])):
-                            if(self.matriz[lin][colD] != "vazio"):
-                                if(self.matriz[lin][colD].cor != self.rodada):
-                                    self.matriz[lin][colD].alvo = True
-                        if(colE > 0):
-                            if(self.matriz[lin][colE] != "vazio"):
-                                if(self.matriz[lin][colE].cor != self.rodada):
-                                    self.matriz[lin][colE].alvo = True
-                if(self.selecao.tipo == "torre"):
-                    True
-
-                if(self.selecao.tipo == "bispo"):
-                    True
-                if(self.selecao.tipo == "rei"):
-                    True
-
-                if(self.selecao.tipo == "rainha"):
-                    True
-
-                if(self.selecao.tipo == "cavalo"):
-                    True
-
 
     def confirmaMovimento(self):
         updateMov = False
@@ -468,18 +474,25 @@ class Tabuleiro:
                             self.matriz[x][y].alvo = False
                             self.matriz[x][y].sprite = self.matriz[x][y].spriteBackup
 
+    def atualizaAlvo(self):
+        self.spriteAlvo = Sprite("Sprites/selecao.png")
+        for i in range(0,len(self.matriz)):
+            for j in range(0,len(self.matriz[0])):
+                if (self.matriz[i][j]!= "vazio"):
+                    if(self.matriz[i][j].alvo == True):
+                        self.spriteAlvo.y = self.matriz[i][j].sprite.y
+                        self.spriteAlvo.x = self.matriz[i][j].sprite.x
+                        self.spriteAlvo.draw()
+
 
     def atualiza(self):
         self.janela.set_background_color(16777215)
         for i in range(0, len(self.casas)):
             self.casas[i].draw()
 
-        for i in range(0,len(self.matriz)):
-            for j in range(0,len(self.matriz[0])):
-                if (self.matriz[i][j]!= "vazio"):
-                    if(self.matriz[i][j].alvo == True):
-                        self.matriz[i][j].sprite = Sprite("Sprites/vermelho.png")
-
+        for i in range(0, len(self.matriz)):
+            for j in range(0, len(self.matriz[0])):
+                if (self.matriz[i][j] != "vazio"):
                     self.matriz[i][j].sprite.x = j * self.tamanhoSprite
                     self.matriz[i][j].sprite.y = i * self.tamanhoSprite
                     self.matriz[i][j].sprite.draw()
@@ -494,5 +507,5 @@ class Tabuleiro:
         self.timerGame(self.tempoIni, pygame.time.get_ticks())
         self.timerJogada(self.tempoInij, pygame.time.get_ticks())
         self.selecaoSprite.draw()
-
+        self.atualizaAlvo()
         self.janela.update()
