@@ -15,6 +15,8 @@ class Tabuleiro:
 
     pretasComidas = []
     brancasComidas = []
+    casaBrancosMortos = []
+    casaPretosMortos = []
     casas = None
     selecao = None
 
@@ -24,7 +26,7 @@ class Tabuleiro:
 
 
     def __init__(self):
-        self.janela = Window(1100, 600)
+        self.janela = Window(1350, 600)
         self.mouse = self.janela.get_mouse()
 
         pygame.display.set_caption("Xadrez ES2") # Coloca titulo no trabalho
@@ -32,34 +34,34 @@ class Tabuleiro:
 # interface grafica do jogo referente ao tempo e troca de turno -----------------------------------------------------------------------
 
         self.spriteVez = Sprite("Sprites/vezdo.png")
-        self.spriteVez.x = 670
+        self.spriteVez.x = 670 + 300
         self.spriteVez.y = 250
 
         self.PPreta = Sprite("Sprites/ppreta.png")
-        self.PPreta.x = 800
+        self.PPreta.x = 800 + 300
         self.PPreta.y = 330
 
         self.PBranca = Sprite("Sprites/pbranco.png") #TODO: trocar sprite para legível
-        self.PBranca.x = 800
+        self.PBranca.x = 800 + 300
         self.PBranca.y = 380
 
         self.apontaJogador = Sprite("Sprites/apontaj.png")
-        self.apontaJogador.x = 730
+        self.apontaJogador.x = 730 + 300
         self.apontaJogador.y = 380
 
         self.tempoJ = Sprite("Sprites/tempoj.png")
-        self.tempoJ.x = 670
+        self.tempoJ.x = 670 + 300
         self.tempoJ.y = 450
 
         self.tempoTotal = Sprite("Sprites/tempot.png")
-        self.tempoTotal.x = 670
+        self.tempoTotal.x = 670 + 300
         self.tempoTotal.y = 530
 
         self.tempoIni = pygame.time.get_ticks()
         self.tempoInij = pygame.time.get_ticks()
 
         self.efeito3d = Sprite("Sprites/efeito3d.png") #TODO: Remover ou trocar por uma coisa mais bonitinha
-        self.efeito3d.x = 600
+        self.efeito3d.x = 600 + 300
         self.efeito3d.y = 0
 #Inicializaçao das peças no tabuleiro-------------------------------------------------------------------------------------------------------------------------------------------------
         self.casas = []
@@ -73,7 +75,7 @@ class Tabuleiro:
                 else:
                     casa = Sprite("Sprites/branco.png")
                     cor = "preto"
-                casa.x = j * self.tamanhoSprite
+                casa.x = 150 + j * self.tamanhoSprite
                 casa.y = i * self.tamanhoSprite
                 self.casas.append(casa)
             if (cor == "preto"):
@@ -81,6 +83,33 @@ class Tabuleiro:
             else:
                 cor = "preto"
         self.rodada = "branco"
+
+#Inicializaçao das casas dos mortos-------------------------------------------------------------------------------------------------------------------------------------------------
+        cor = "preto"
+        for i in range (0, 16):
+            if (cor == "preto"):
+                morto1 = Sprite("Sprites/morto-1.png")
+                morto2 = Sprite("Sprites/morto-2.png")
+                cor = "branco"
+            else:
+                morto1 = Sprite("Sprites/morto-2.png")
+                morto2 = Sprite("Sprites/morto-1.png")
+                cor = "preto"
+            if( i < 8):
+                morto1.x = 0
+                morto2.x = 750
+                index = i
+            else:
+                temp = morto1
+                morto1 = morto2
+                morto2 = temp
+                morto1.x = 75
+                morto2.x = 825
+                index = i - 8
+            morto1.y = index * self.tamanhoSprite
+            morto2.y = index * self.tamanhoSprite
+            self.casaBrancosMortos.append(morto1)
+            self.casaPretosMortos.append(morto2)
         self.selecaoSprite = Sprite("Sprites/selecao.png")
         self.selecaoSprite.x = self.janela.width
         self.selecaoSprite.y = self.janela.height
@@ -91,14 +120,14 @@ class Tabuleiro:
         self.hours, self.rem = divmod(end/1000 - start/1000,3600)
         self.minutes, self.seconds = divmod(self.rem, 60)
         self.stringResp = "{:0>2}:{:0>2}:{:0>2}".format(int(self.hours), int(self.minutes), int(self.seconds))
-        self.janela.draw_text(self.stringResp, 900, self.tempoTotal.y, 30, (8, 8, 8))
+        self.janela.draw_text(self.stringResp, 900 + 300, self.tempoTotal.y, 30, (8, 8, 8))
 
 # metodo para verificar o tempo de 1 jogada ------------------------------------------------------------------------------------------------------------------
     def timerJogada(self, start, end):
         self.hours, self.rem = divmod(end/1000 - start/1000, 3600)
         self.minutes, self.seconds = divmod(self.rem, 60)
         self.stringResp = "{:0>2}:{:0>2}:{:0>2}".format(int(self.hours), int(self.minutes), int(self.seconds))
-        self.janela.draw_text(self.stringResp, 900, self.tempoJ.y, 30, (8, 8, 8))
+        self.janela.draw_text(self.stringResp, 900 + 300, self.tempoJ.y, 30, (8, 8, 8))
 
     def inicializaMatriz(self):
         torreP1 =  Peca("torre", "preto", Sprite("Sprites/torreP.png"),0,0,False)
@@ -166,7 +195,7 @@ class Tabuleiro:
                                         self.matriz[x][y] = "vazio"
                                     elif(self.matriz[x][y].alvo == True):
                                         self.matriz[x][y].alvo = False
-                                        self.matriz[x][y].sprite = self.matriz[x][y].spriteBackup
+                                        #self.matriz[x][y].sprite = self.matriz[x][y].spriteBackup
                         self.janela.update()
                         self.selecaoSprite.x = self.matriz[i][j].sprite.x
                         self.selecaoSprite.y = self.matriz[i][j].sprite.y
@@ -259,6 +288,11 @@ class Tabuleiro:
                     self.matriz[i][j] = disponivel
                     i = i + inc_linha
                     j = j + inc_coluna
+                elif(self.matriz[i][j].cor != self.selecao.cor):
+                    self.matriz[i][j].alvo=True
+                    i = i + inc_linha
+                    j = j + inc_coluna
+                    break
                 else:
                     break
 
@@ -289,11 +323,13 @@ class Tabuleiro:
                 #Colorindo as peças que podem ser comidas
             if self.selecao.linha-1 >= 0:
                 if self.selecao.coluna+1 <= 7:
-                    if self.matriz[self.selecao.linha-1][self.selecao.coluna+1] != "vazio":
-                        return #pintar o alvo
+                    if (self.matriz[self.selecao.linha-1][self.selecao.coluna+1] != "vazio" and 
+                    self.matriz[self.selecao.linha-1][self.selecao.coluna+1].cor != self.selecao.cor):
+                        self.matriz[self.selecao.linha - 1][self.selecao.coluna + 1].alvo=True
                 if self.selecao.coluna-1 >= 0:
-                    if self.matriz[self.selecao.linha-1][self.selecao.coluna-1] != "vazio":
-                        return #pintar o alvo
+                    if (self.matriz[self.selecao.linha-1][self.selecao.coluna-1] != "vazio" and
+                       self.matriz[self.selecao.linha-1][self.selecao.coluna-1].cor != self.selecao.cor):
+                        self.matriz[self.selecao.linha - 1][self.selecao.coluna - 1].alvo=True
 # --------------------------------------------- a partir daqui para peos pretos -----------------------------------------------------------
         if (self.selecao.cor == "preto"):
             # Se peça ainda não moveu, liberar duas casas
@@ -322,11 +358,13 @@ class Tabuleiro:
             # Colorindo as peças que podem ser comidas
             if self.selecao.linha + 1 < len(self.matriz):
                 if self.selecao.coluna + 1 <= 7:
-                    if self.matriz[self.selecao.linha + 1][self.selecao.coluna + 1] != "vazio":
-                        return  # pintar o alvo
+                    if (self.matriz[self.selecao.linha + 1][self.selecao.coluna + 1]!="vazio" and 
+                       self.matriz[self.selecao.linha + 1][self.selecao.coluna + 1].cor != self.selecao.cor):
+                        self.matriz[self.selecao.linha + 1][self.selecao.coluna + 1].alvo=True
                 if self.selecao.coluna - 1 >= 0:
-                    if self.matriz[self.selecao.linha + 1][self.selecao.coluna - 1] != "vazio":
-                        return  # pintar o alvo
+                    if (self.matriz[self.selecao.linha + 1][self.selecao.coluna - 1]!="vazio" and 
+                       self.matriz[self.selecao.linha + 1][self.selecao.coluna - 1].cor != self.selecao.cor):
+                        self.matriz[self.selecao.linha + 1][self.selecao.coluna - 1].alvo=True
 
 #----Função que implementa a movimentação da torre.
 #----Cada "for" resolve uma direção calculando os limites.
@@ -339,6 +377,9 @@ class Tabuleiro:
                 disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), i,
                                           self.selecao.coluna, False)
                 self.matriz[i][self.selecao.coluna] = disponivel
+            elif(self.matriz[i][self.selecao.coluna].cor != self.selecao.cor):
+                    self.matriz[i][self.selecao.coluna].alvo=True
+                    break
             else:
                 break
         #---for incremental: calcula todas as posições a direita da torre
@@ -347,6 +388,9 @@ class Tabuleiro:
                 disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha,
                                       i, False)
                 self.matriz[self.selecao.linha][i] = disponivel
+            elif(self.matriz[self.selecao.linha][i].cor != self.selecao.cor):
+                    self.matriz[self.selecao.linha][i].alvo=True
+                    break
             else:
                 break  
         #---for incremental: calcula todas as posições a baixo da torre
@@ -355,6 +399,9 @@ class Tabuleiro:
                 disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), i,
                                          self.selecao.coluna, False)
                 self.matriz[i][self.selecao.coluna] = disponivel
+            elif(self.matriz[i][self.selecao.coluna].cor != self.selecao.cor):
+                    self.matriz[i][self.selecao.coluna].alvo=True
+                    break
             else:
                 break
         #---for decremental: calcula todas as posições a esquerda da torre
@@ -363,6 +410,9 @@ class Tabuleiro:
                 disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha,
                                               i, False)
                 self.matriz[self.selecao.linha][i] = disponivel
+            elif(self.matriz[self.selecao.linha][i].cor != self.selecao.cor):
+                    self.matriz[self.selecao.linha][i].alvo=True
+                    break
             else:
                 break 
 
@@ -388,6 +438,8 @@ class Tabuleiro:
                     disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), linha,
                                                   coluna, False)
                     self.matriz[linha][coluna] = disponivel
+                elif(self.matriz[linha][coluna].cor != self.selecao.cor):
+                    self.matriz[linha][coluna].alvo=True
 
 #----Função que implementa a movimentação do cavalo.
 #----Se assemelha com a implementação da movimentação do rei.
@@ -413,6 +465,30 @@ class Tabuleiro:
                     disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), i,
                                                   j, False)
                     self.matriz[i][j] = disponivel
+                elif(self.matriz[i][j].cor != self.selecao.cor):
+                    self.matriz[i][j].alvo=True
+
+    def defineDisponiveis(self):
+        if (self.selecao!=None and self.selecao.cor == self.rodada):
+
+            if(self.selecao.tipo == "peao"):
+                self.movimento_peao()
+
+            if(self.selecao.tipo == "torre"):
+                self.movimento_torre()
+
+            if(self.selecao.tipo == "bispo"):
+                self.movimento_bispo()
+
+            if(self.selecao.tipo == "rei"):
+                self.movimento_rei(self.selecao.linha, self.selecao.coluna)
+
+            if(self.selecao.tipo == "rainha"):
+                self.movimento_bispo()
+                self.movimento_torre()
+
+            if(self.selecao.tipo == "cavalo"):
+                self.movimento_cavalo()
 
     def confirmaMovimento(self):
         updateMov = False
@@ -444,24 +520,37 @@ class Tabuleiro:
             elif(updateAlvo==True):
                 if(self.matriz[acao.linha][acao.coluna].cor == "branco"):
                     self.brancasComidas.append(self.matriz[acao.linha][acao.coluna])
+                    index = len(self.brancasComidas)-1
+                    if(index < 8):
+                        self.matriz[acao.linha][acao.coluna].sprite.x = 0
+                    else:
+                        self.matriz[acao.linha][acao.coluna].sprite.x = 75
+                        index = index - 8
                 if(self.matriz[acao.linha][acao.coluna].cor == "preto"):
                     self.pretasComidas.append(self.matriz[acao.linha][acao.coluna])
+                    index = len(self.pretasComidas)-1
+                    if(index < 8):
+                        self.matriz[acao.linha][acao.coluna].sprite.x = 750
+                    else:
+                        self.matriz[acao.linha][acao.coluna].sprite.x = 825
+                        index = index - 8
+                self.matriz[acao.linha][acao.coluna].sprite.y = 75 * index
                 self.matriz[self.selecao.linha][self.selecao.coluna] = "vazio"
                 self.selecao.linha = acao.linha
                 self.selecao.coluna = acao.coluna
                 self.matriz[acao.linha][acao.coluna] = self.selecao
-
+            
             if(self.rodada == "branco"):
                 self.rodada = "preto"
                 # toda vez que troca a jogada o tempo zera e a seta muda
                 self.apontaJogador.y = self.PPreta.y
                 self.tempoInij = pygame.time.get_ticks()
             else:
+                self.selecao = None
                 self.rodada = "branco"
                 # toda vez que troca a jogada o tempo zera e a seta muda
                 self.apontaJogador.y = self.PBranca.y
                 self.tempoInij = pygame.time.get_ticks()
-            self.selecao = None
             self.selecaoSprite.x=self.janela.width
             self.selecaoSprite.y=self.janela.height
 
@@ -472,7 +561,6 @@ class Tabuleiro:
                             self.matriz[x][y] = "vazio"
                         elif(self.matriz[x][y].alvo == True):
                             self.matriz[x][y].alvo = False
-                            self.matriz[x][y].sprite = self.matriz[x][y].spriteBackup
 
     def atualizaAlvo(self):
         self.spriteAlvo = Sprite("Sprites/selecao.png")
@@ -489,11 +577,27 @@ class Tabuleiro:
         self.janela.set_background_color(16777215)
         for i in range(0, len(self.casas)):
             self.casas[i].draw()
-
+        for i in range(0, len(self.casaBrancosMortos)):
+            self.casaBrancosMortos[i].draw()
+        for i in range(0, len(self.casaPretosMortos)):
+            self.casaPretosMortos[i].draw()
+        for i in range(0, len(self.brancasComidas)):
+            self.brancasComidas[i].sprite.draw()
+        for i in range(0, len(self.pretasComidas)):
+            self.pretasComidas[i].sprite.draw()
+        for i in range(0,len(self.matriz)):
+            for j in range(0,len(self.matriz[0])):
+                if (self.matriz[i][j]!= "vazio"):
+                    if(self.matriz[i][j].alvo == True):
+                        colisao = Sprite("Sprites/vermelho.png")
+                        colisao.x = 150 + j * self.tamanhoSprite
+                        colisao.y = i * self.tamanhoSprite
+                        colisao.draw()
+                    
         for i in range(0, len(self.matriz)):
             for j in range(0, len(self.matriz[0])):
                 if (self.matriz[i][j] != "vazio"):
-                    self.matriz[i][j].sprite.x = j * self.tamanhoSprite
+                    self.matriz[i][j].sprite.x = 150 + j * self.tamanhoSprite
                     self.matriz[i][j].sprite.y = i * self.tamanhoSprite
                     self.matriz[i][j].sprite.draw()
 
@@ -507,5 +611,5 @@ class Tabuleiro:
         self.timerGame(self.tempoIni, pygame.time.get_ticks())
         self.timerJogada(self.tempoInij, pygame.time.get_ticks())
         self.selecaoSprite.draw()
-        self.atualizaAlvo()
+        #self.atualizaAlvo()
         self.janela.update()

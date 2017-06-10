@@ -14,5 +14,5 @@ class Peca:
         self.linha = linha
         self.coluna = coluna
         self.jaMoveu = ja_moveu
-        self.spriteBackup = sprite
+       # self.spriteBackup = sprite
         self.alvo = False
