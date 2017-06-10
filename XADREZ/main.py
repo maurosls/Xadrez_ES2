@@ -64,7 +64,7 @@ while True:
     tab.atualiza()
     tab.selecionaPeca()
     tab.defineDisponiveis()
-    #tab.defineAlvos()
+    tab.defineAlvos()
     tab.atualiza()
-    if(tab.selecao != "vazio" or tab.selecao != None):
+    if(tab.selecao != "vazio" and tab.selecao != None):
         tab.confirmaMovimento()

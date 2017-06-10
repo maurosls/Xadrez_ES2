@@ -180,32 +180,42 @@ class Tabuleiro:
                     self.matriz[i][j].sprite.y = i*self.tamanhoSprite
 
     def selecionaPeca(self):
-        for i in range(0,len(self.matriz)):
+        # varre o tabuleiro limpando os possiveis alvos da joganda anterior que agora estao na vez de jogar ----------------------------------------------------------------------------
+
+        for x in range(0, len(self.matriz)):
+            for y in range(0, len(self.matriz[0])):
+                if (self.matriz[x][y] != "vazio"):
+                    if (self.matriz[x][y].tipo == "disponivel"):
+                        self.matriz[x][y] = "vazio"
+                    elif (self.matriz[x][y].alvo == True):
+                        self.matriz[x][y].alvo = False
+                       # self.matriz[x][y].sprite = self.matriz[x][y].spriteBackup
+
+                        # varre o tabuleiro verificando qual peca foi selecionada para jogar ------------------------------------------------------------------------------
+
+        for i in range(0, len(self.matriz)):
             for j in range(0, len(self.matriz[0])):
-                if (self.matriz[i][j]!="vazio"):
+                if (self.matriz[i][j] != "vazio"):
                     while ((self.mouse.is_button_pressed(1) and
-                               self.mouse.is_over_object(self.matriz[i][j].sprite) and
-                               self.matriz[i][j].cor== "branco") or (self.mouse.is_button_pressed(1) and
-                               self.mouse.is_over_object(self.matriz[i][j].sprite) and
-                               self.matriz[i][j].cor== "preto")):
-                        for x in range(0, len(self.matriz)):
-                            for y in range(0, len(self.matriz[0])):
-                                if (self.matriz[x][y] != "vazio"):
-                                    if(self.matriz[x][y].tipo == "disponivel"):
-                                        self.matriz[x][y] = "vazio"
-                                    elif(self.matriz[x][y].alvo == True):
-                                        self.matriz[x][y].alvo = False
-                                        #self.matriz[x][y].sprite = self.matriz[x][y].spriteBackup
-                        self.janela.update()
-                        self.selecaoSprite.x = self.matriz[i][j].sprite.x
-                        self.selecaoSprite.y = self.matriz[i][j].sprite.y
-                        self.selecao = self.matriz[i][j]
+                                self.mouse.is_over_object(self.matriz[i][j].sprite) and
+                                    self.matriz[i][j].cor == "branco") or (self.mouse.is_button_pressed(1) and
+                                                                               self.mouse.is_over_object(
+                                                                                   self.matriz[i][j].sprite) and
+                                                                                   self.matriz[i][j].cor == "preto")):
+                        if (self.matriz[i][j].cor == self.rodada):
+
+                            self.janela.update()
+                            self.selecaoSprite.x = self.matriz[i][j].sprite.x
+                            self.selecaoSprite.y = self.matriz[i][j].sprite.y
+                            self.selecao = self.matriz[i][j]
+                        else:
+                            break
 
 
 
-#----Função que implementa a movimentação do bispo.
-#----Se assemelha com a implementação do rei e do cavalo.
-#----No if, os argumentos são as direções de verificação.
+                            # ----Função que implementa a movimentação do bispo.
+                            # ----Se assemelha com a implementação do rei e do cavalo.
+                            # ----No if, os argumentos são as direções de verificação.
 
     def defineDisponiveis(self):
         if (self.selecao!=None and self.selecao.cor == self.rodada):
@@ -319,17 +329,7 @@ class Tabuleiro:
                         self.matriz[self.selecao.linha-1][self.selecao.coluna] = disponivel
                 else:
                     return
-                    #PROGRAMAR A TROCA DE PEÇAS!
-                #Colorindo as peças que podem ser comidas
-            if self.selecao.linha-1 >= 0:
-                if self.selecao.coluna+1 <= 7:
-                    if (self.matriz[self.selecao.linha-1][self.selecao.coluna+1] != "vazio" and 
-                    self.matriz[self.selecao.linha-1][self.selecao.coluna+1].cor != self.selecao.cor):
-                        self.matriz[self.selecao.linha - 1][self.selecao.coluna + 1].alvo=True
-                if self.selecao.coluna-1 >= 0:
-                    if (self.matriz[self.selecao.linha-1][self.selecao.coluna-1] != "vazio" and
-                       self.matriz[self.selecao.linha-1][self.selecao.coluna-1].cor != self.selecao.cor):
-                        self.matriz[self.selecao.linha - 1][self.selecao.coluna - 1].alvo=True
+
 # --------------------------------------------- a partir daqui para peos pretos -----------------------------------------------------------
         if (self.selecao.cor == "preto"):
             # Se peça ainda não moveu, liberar duas casas
@@ -354,17 +354,7 @@ class Tabuleiro:
                         self.matriz[self.selecao.linha + 1][self.selecao.coluna] = disponivel
                 else:
                     return
-                    # PROGRAMAR A TROCA DE PEÇAS!
-            # Colorindo as peças que podem ser comidas
-            if self.selecao.linha + 1 < len(self.matriz):
-                if self.selecao.coluna + 1 <= 7:
-                    if (self.matriz[self.selecao.linha + 1][self.selecao.coluna + 1]!="vazio" and 
-                       self.matriz[self.selecao.linha + 1][self.selecao.coluna + 1].cor != self.selecao.cor):
-                        self.matriz[self.selecao.linha + 1][self.selecao.coluna + 1].alvo=True
-                if self.selecao.coluna - 1 >= 0:
-                    if (self.matriz[self.selecao.linha + 1][self.selecao.coluna - 1]!="vazio" and 
-                       self.matriz[self.selecao.linha + 1][self.selecao.coluna - 1].cor != self.selecao.cor):
-                        self.matriz[self.selecao.linha + 1][self.selecao.coluna - 1].alvo=True
+
 
 #----Função que implementa a movimentação da torre.
 #----Cada "for" resolve uma direção calculando os limites.
@@ -467,28 +457,6 @@ class Tabuleiro:
                     self.matriz[i][j] = disponivel
                 elif(self.matriz[i][j].cor != self.selecao.cor):
                     self.matriz[i][j].alvo=True
-
-    def defineDisponiveis(self):
-        if (self.selecao!=None and self.selecao.cor == self.rodada):
-
-            if(self.selecao.tipo == "peao"):
-                self.movimento_peao()
-
-            if(self.selecao.tipo == "torre"):
-                self.movimento_torre()
-
-            if(self.selecao.tipo == "bispo"):
-                self.movimento_bispo()
-
-            if(self.selecao.tipo == "rei"):
-                self.movimento_rei(self.selecao.linha, self.selecao.coluna)
-
-            if(self.selecao.tipo == "rainha"):
-                self.movimento_bispo()
-                self.movimento_torre()
-
-            if(self.selecao.tipo == "cavalo"):
-                self.movimento_cavalo()
 
     def confirmaMovimento(self):
         updateMov = False
@@ -611,5 +579,5 @@ class Tabuleiro:
         self.timerGame(self.tempoIni, pygame.time.get_ticks())
         self.timerJogada(self.tempoInij, pygame.time.get_ticks())
         self.selecaoSprite.draw()
-        #self.atualizaAlvo()
+        self.atualizaAlvo()
         self.janela.update()
