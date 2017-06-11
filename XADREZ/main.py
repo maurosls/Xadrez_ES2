@@ -64,8 +64,6 @@ while True:
     tab.atualiza()
     tab.selecionaPeca()
     tab.defineDisponiveis()
-    if(tab.estadoPromocaoPeao == True):
-        tab.selecionaPromocao()
     tab.defineAlvos()
     tab.atualiza()
     if(tab.selecao != "vazio" and tab.selecao != None):

@@ -261,7 +261,7 @@ class Tabuleiro:
                                 if (self.matriz[lin][colD] != "vazio"):
                                     if (self.matriz[lin][colD].cor != self.rodada):
                                         self.matriz[lin][colD].alvo = True
-                            if (colE > 0):
+                            if (colE >= 0):
                                 if (self.matriz[lin][colE] != "vazio"):
                                     if (self.matriz[lin][colE].cor != self.rodada):
                                         self.matriz[lin][colE].alvo = True
@@ -486,17 +486,18 @@ class Tabuleiro:
             self.pecaPromocao.tipo = index
             self.estadoPromocaoPeao = False
 
-    def selecionaPromocao(self):
-        index = None
-        for i in self.interfacePromocaoPeao:
-            while (self.mouse.is_button_pressed(1) and
-                   self.mouse.is_over_object(self.interfacePromocaoPeao[i])):
-                self.janela.update()
-                index = i
-        if(index != None):
-            self.trocaPeca(index)
+    def seleciona_peca_para_Promocao(self):
 
-    def promocaoPeao(self):
+            index = None
+            for i in self.interfacePromocaoPeao:
+                while ((self.mouse.is_button_pressed(1) and
+                       self.mouse.is_over_object(self.interfacePromocaoPeao[i]))):
+                    self.janela.update()
+                    index = i
+            if(index != None):
+                self.trocaPeca(index)
+
+    def desenha_Tab_de_promocaoPeao(self):
         self.interfacePromocaoPeao = {'cavalo': Sprite("Sprites/cavaloP.png"), 
                                       'torre' : Sprite("Sprites/torreP.png"), 
                                       'bispo' : Sprite("Sprites/bispoP.png"), 
@@ -507,16 +508,31 @@ class Tabuleiro:
             self.interfacePromocaoPeao[i].y = 505
             inc = inc + 1
 
+        if (self.estadoPromocaoPeao == True):
+            for i in self.interfacePromocaoPeao:
+                self.interfacePromocaoPeao[i].draw()
+
     def verificaPromocao(self, peca):
-        if(peca.cor == "branco" and peca.linha == 0):
-            self.pecaPromocao = peca
-            self.estadoPromocaoPeao = True
-            self.promocaoPeao()
-            
-        if(peca.cor == "preto" and peca.linha == 7):
-            self.pecaPromocao = peca
-            self.estadoPromocaoPeao = True
-            self.promocaoPeao()
+
+        if (peca.tipo == "peao"):
+            if(peca.cor == "branco" and peca.linha == 0):
+                self.pecaPromocao = peca
+                self.estadoPromocaoPeao = True
+                while(self.estadoPromocaoPeao==True):
+
+                    self.desenha_Tab_de_promocaoPeao()
+                    self.seleciona_peca_para_Promocao()
+                    self.janela.update()
+
+            elif(peca.cor == "preto" and peca.linha == 7):
+                self.pecaPromocao = peca
+                self.estadoPromocaoPeao = True
+                while (self.estadoPromocaoPeao == True):
+                    self.desenha_Tab_de_promocaoPeao()
+                    self.seleciona_peca_para_Promocao()
+                    self.janela.update()
+            else:
+                self.estadoPromocaoPeao = False
 
 
     def moveOMorto(self, acao):
@@ -562,9 +578,11 @@ class Tabuleiro:
                 self.selecao.linha = acao.linha
                 self.selecao.coluna = acao.coluna
                 self.matriz[acao.linha][acao.coluna] = self.selecao
+
                 if (self.selecao.tipo=="peao"):
                     self.selecao.jaMoveu = True
-                    self.verificaPromocao(self.matriz[acao.linha][acao.coluna])
+
+
 
             elif(updateAlvo==True):
                 self.moveOMorto(acao)
@@ -573,7 +591,26 @@ class Tabuleiro:
                 self.selecao.linha = acao.linha
                 self.selecao.coluna = acao.coluna
                 self.matriz[acao.linha][acao.coluna] = self.selecao
-            
+
+
+            for x in range(0, len(self.matriz)):
+                for y in range(0, len(self.matriz[0])):
+                    if (self.matriz[x][y] != "vazio"):
+                        if (self.matriz[x][y].tipo == "disponivel"):
+                            self.matriz[x][y] = "vazio"
+                        elif(self.matriz[x][y].alvo == True):
+                            self.matriz[x][y].alvo = False
+
+
+            self.janela.update()
+            self.desenha_base_do_Tabuleiro()
+            self.desenhaMatSprites()
+            self.desenhaMat_de_Mortos()
+            self.janela.update()
+            self.verificaPromocao(self.matriz[acao.linha][acao.coluna])
+
+
+
             if(self.rodada == "branco"):
                 self.rodada = "preto"
                 # toda vez que troca a jogada o tempo zera e a seta muda
@@ -588,13 +625,6 @@ class Tabuleiro:
             self.selecaoSprite.x=self.janela.width
             self.selecaoSprite.y=self.janela.height
 
-            for x in range(0, len(self.matriz)):
-                for y in range(0, len(self.matriz[0])):
-                    if (self.matriz[x][y] != "vazio"):
-                        if (self.matriz[x][y].tipo == "disponivel"):
-                            self.matriz[x][y] = "vazio"
-                        elif(self.matriz[x][y].alvo == True):
-                            self.matriz[x][y].alvo = False
 
     def atualizaAlvo(self):
         self.spriteAlvo = Sprite("Sprites/selecao.png")
@@ -606,12 +636,17 @@ class Tabuleiro:
                         self.spriteAlvo.x = self.matriz[i][j].sprite.x
                         self.spriteAlvo.draw()
 
+    def desenhaMatSprites(self):
 
-    def atualiza(self):
-        self.janela.set_background_color(16777215)
+        for i in range(0, len(self.matriz)):
+            for j in range(0, len(self.matriz[0])):
+                if (self.matriz[i][j] != "vazio"):
+                    self.matriz[i][j].sprite.x = 150 + j * self.tamanhoSprite
+                    self.matriz[i][j].sprite.y = i * self.tamanhoSprite
+                    self.matriz[i][j].sprite.draw()
 
-        for i in range(0, len(self.casas)):
-            self.casas[i].draw()
+    def desenhaMat_de_Mortos(self):
+
         for i in range(0, len(self.casaBrancosMortos)):
             self.casaBrancosMortos[i].draw()
         for i in range(0, len(self.casaPretosMortos)):
@@ -621,9 +656,17 @@ class Tabuleiro:
         for i in range(0, len(self.pretasComidas)):
             self.pretasComidas[i].sprite.draw()
 
-        if(self.estadoPromocaoPeao == True):
-            for i in self.interfacePromocaoPeao:
-                self.interfacePromocaoPeao[i].draw()
+    def desenha_base_do_Tabuleiro(self):
+        for i in range(0, len(self.casas)):
+            self.casas[i].draw()
+
+    def atualiza(self):
+
+        self.janela.set_background_color(16777215)
+
+        self.desenha_base_do_Tabuleiro()
+
+        self.desenhaMat_de_Mortos()
 
         for i in range(0,len(self.matriz)):
             for j in range(0,len(self.matriz[0])):
@@ -634,13 +677,7 @@ class Tabuleiro:
                         colisao.y = i * self.tamanhoSprite
                         colisao.draw()
                     
-        for i in range(0, len(self.matriz)):
-            for j in range(0, len(self.matriz[0])):
-                if (self.matriz[i][j] != "vazio"):
-                    self.matriz[i][j].sprite.x = 150 + j * self.tamanhoSprite
-                    self.matriz[i][j].sprite.y = i * self.tamanhoSprite
-                    self.matriz[i][j].sprite.draw()
-
+        self.desenhaMatSprites()
         self.efeito3d.draw()
         self.spriteVez.draw()
         self.PPreta.draw()
