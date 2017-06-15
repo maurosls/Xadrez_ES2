@@ -714,7 +714,7 @@ class Tabuleiro:
                             for c in range(0, len(self.matriz[0])):
                                 if(self.matriz[l][c] != "vazio" and self.matriz[l][c].cor == self.rodada):
                                     if(self.matriz[l][c].alvo == True ):
-                                        print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, " branco? ", self.matriz[l][c].alvo)
+                                        print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, " branco")
                                     if(self.matriz[l][c].tipo == "rei" and self.matriz[l][c].alvo == True ):
                                         self.cont = self.cont + 1
 
