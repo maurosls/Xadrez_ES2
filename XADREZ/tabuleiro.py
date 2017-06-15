@@ -659,6 +659,8 @@ class Tabuleiro:
                 self.tempoInij = pygame.time.get_ticks()
             self.selecaoSprite.x=self.janela.width
             self.selecaoSprite.y=self.janela.height
+            cont = self.verificaCheck()
+
 
     def atualizaAlvo(self):
         self.spriteAlvo = Sprite("Sprites/selecao.png")
@@ -696,38 +698,25 @@ class Tabuleiro:
 
     def verificaCheck(self):
         self.cont = 0
+        tempRodada = self.rodada 
         for x in range(0, len(self.matriz)):
             for y in range(0, len(self.matriz[0])):
 
 # varre o vetor para todos os adversarios procurando se algum deles faz o rei inimigo de alvo -------------------------------------------
 
                     if(self.matriz[x][y] != "vazio" and  self.matriz[x][y].cor != self.rodada):
-                        self.selecaoSprite.x = self.matriz[x][y].sprite.x
-                        self.selecaoSprite.y = self.matriz[x][y].sprite.y
                         self.selecao = self.matriz[x][y]
-                        if (self.selecao.tipo == "peao"):
-                            self.movimento_peao()
-                        if (self.selecao.tipo == "torre"):
-                            self.movimento_torre()
-
-                        if (self.selecao.tipo == "bispo"):
-                            self.movimento_bispo()
-
-                        if (self.selecao.tipo == "rei"):
-                            self.movimento_rei(self.selecao.linha, self.selecao.coluna)
-
-                        if (self.selecao.tipo == "rainha"):
-                            self.movimento_bispo()
-                            self.movimento_torre()
-
-                        if (self.selecao.tipo == "cavalo"):
-                            self.movimento_cavalo()
+                        self.rodada = self.selecao.cor
+                        self.defineDisponiveis()
+                        self.rodada = tempRodada
 
                         for l in range(0, len(self.matriz)):
                             for c in range(0, len(self.matriz[0])):
                                 if(self.matriz[l][c] != "vazio" and self.matriz[l][c].cor == self.rodada):
+                                    if(self.matriz[l][c].alvo == True ):
+                                        print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, " branco? ", self.matriz[l][c].alvo)
                                     if(self.matriz[l][c].tipo == "rei" and self.matriz[l][c].alvo == True ):
-                                        self.cont = self.cont +1
+                                        self.cont = self.cont + 1
 
 # limpa a matriz para cada teste de cada peça os campos que ela marcou e os alvos-----------------------------------------------------------
 
@@ -738,7 +727,7 @@ class Tabuleiro:
                                         self.matriz[i][j] = "vazio"
                                     elif (self.matriz[i][j].alvo == True):
                                         self.matriz[i][j].alvo = False
-
+        self.selecao = None
 # retorna a resposta se 1 ou mais oponentes fazem meu rei de alvo --------------------------------------------
         return self.cont
 
