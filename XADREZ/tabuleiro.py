@@ -6,7 +6,7 @@ class Tabuleiro:
 
     janela = None
     mouse = None
-
+    jogou = False
     tamanhoSprite = None
     branco = None
     preto = None
@@ -330,8 +330,25 @@ class Tabuleiro:
                     if(self.matriz[self.selecao.linha-1][self.selecao.coluna] == "vazio"):
                         disponivel = Peca("disponivel",None,Sprite("Sprites/verde.png"),self.selecao.linha-1,self.selecao.coluna,False)
                         self.matriz[self.selecao.linha-1][self.selecao.coluna] = disponivel
-                else:
-                    return
+
+
+        if (self.rodada == "branco"):
+                    lin = self.selecao.linha - 1;
+                    colD = self.selecao.coluna + 1;
+                    colE = self.selecao.coluna - 1;
+        if (self.rodada == "preto"):
+                    lin = self.selecao.linha + 1;
+                    colD = self.selecao.coluna + 1;
+                    colE = self.selecao.coluna - 1;
+        if (lin >= 0 and lin < len(self.matriz[0])):
+                    if (colD < len(self.matriz[0])):
+                        if (self.matriz[lin][colD] != "vazio"):
+                            if (self.matriz[lin][colD].cor != self.rodada):
+                                self.matriz[lin][colD].alvo = True
+                    if (colE >= 0):
+                        if (self.matriz[lin][colE] != "vazio"):
+                            if (self.matriz[lin][colE].cor != self.rodada):
+                                self.matriz[lin][colE].alvo = True
 
 # --------------------------------------------- a partir daqui para peos pretos -----------------------------------------------------------
         if (self.selecao.cor == "preto"):
@@ -355,8 +372,25 @@ class Tabuleiro:
                         disponivel = Peca("disponivel", None, Sprite("Sprites/verde.png"), self.selecao.linha + 1,
                                               self.selecao.coluna, False)
                         self.matriz[self.selecao.linha + 1][self.selecao.coluna] = disponivel
-                else:
-                    return
+
+
+        if (self.rodada == "branco"):
+                    lin = self.selecao.linha - 1;
+                    colD = self.selecao.coluna + 1;
+                    colE = self.selecao.coluna - 1;
+        if (self.rodada == "preto"):
+                    lin = self.selecao.linha + 1;
+                    colD = self.selecao.coluna + 1;
+                    colE = self.selecao.coluna - 1;
+        if (lin >= 0 and lin < len(self.matriz[0])):
+                        if (colD < len(self.matriz[0])):
+                            if (self.matriz[lin][colD] != "vazio"):
+                                if (self.matriz[lin][colD].cor != self.rodada):
+                                    self.matriz[lin][colD].alvo = True
+                        if (colE >= 0):
+                             if (self.matriz[lin][colE] != "vazio"):
+                                 if (self.matriz[lin][colE].cor != self.rodada):
+                                     self.matriz[lin][colE].alvo = True
 
 
 #----Função que implementa a movimentação da torre.
@@ -611,6 +645,7 @@ class Tabuleiro:
 
 
 
+
             if(self.rodada == "branco"):
                 self.rodada = "preto"
                 # toda vez que troca a jogada o tempo zera e a seta muda
@@ -624,7 +659,6 @@ class Tabuleiro:
                 self.tempoInij = pygame.time.get_ticks()
             self.selecaoSprite.x=self.janela.width
             self.selecaoSprite.y=self.janela.height
-
 
     def atualizaAlvo(self):
         self.spriteAlvo = Sprite("Sprites/selecao.png")
@@ -659,6 +693,58 @@ class Tabuleiro:
     def desenha_base_do_Tabuleiro(self):
         for i in range(0, len(self.casas)):
             self.casas[i].draw()
+
+    def verificaCheck(self):
+        self.cont = 0
+        for x in range(0, len(self.matriz)):
+            for y in range(0, len(self.matriz[0])):
+
+# varre o vetor para todos os adversarios procurando se algum deles faz o rei inimigo de alvo -------------------------------------------
+
+                    if(self.matriz[x][y] != "vazio" and  self.matriz[x][y].cor != self.rodada):
+                        self.selecaoSprite.x = self.matriz[x][y].sprite.x
+                        self.selecaoSprite.y = self.matriz[x][y].sprite.y
+                        self.selecao = self.matriz[x][y]
+                        if (self.selecao.tipo == "peao"):
+                            self.movimento_peao()
+                        if (self.selecao.tipo == "torre"):
+                            self.movimento_torre()
+
+                        if (self.selecao.tipo == "bispo"):
+                            self.movimento_bispo()
+
+                        if (self.selecao.tipo == "rei"):
+                            self.movimento_rei(self.selecao.linha, self.selecao.coluna)
+
+                        if (self.selecao.tipo == "rainha"):
+                            self.movimento_bispo()
+                            self.movimento_torre()
+
+                        if (self.selecao.tipo == "cavalo"):
+                            self.movimento_cavalo()
+
+                        for l in range(0, len(self.matriz)):
+                            for c in range(0, len(self.matriz[0])):
+                                if(self.matriz[l][c] != "vazio" and self.matriz[l][c].cor == self.rodada):
+                                    if(self.matriz[l][c].tipo == "rei" and self.matriz[l][c].alvo == True ):
+                                        self.cont = self.cont +1
+
+# limpa a matriz para cada teste de cada peça os campos que ela marcou e os alvos-----------------------------------------------------------
+
+                    for i in range(0, len(self.matriz)):
+                            for j in range(0, len(self.matriz[0])):
+                                if (self.matriz[i][j] != "vazio"):
+                                    if (self.matriz[i][j].tipo == "disponivel"):
+                                        self.matriz[i][j] = "vazio"
+                                    elif (self.matriz[i][j].alvo == True):
+                                        self.matriz[i][j].alvo = False
+
+# retorna a resposta se 1 ou mais oponentes fazem meu rei de alvo --------------------------------------------
+        return self.cont
+
+
+
+
 
     def atualiza(self):
 
