@@ -1,6 +1,7 @@
 from PPlay.window import *
 from PPlay.sprite import *
 from peca import *
+from ia import *
 
 class Tabuleiro:
 
@@ -12,7 +13,7 @@ class Tabuleiro:
     preto = None
     verde = None
     selecaoSprite = None
-
+    tipoJogo = None
     pretasComidas = []
     brancasComidas = []
     casaBrancosMortos = []
@@ -28,10 +29,10 @@ class Tabuleiro:
     pecaPromocao = None
     interfacePromocaoPeao = {}
 
-    def __init__(self):
+    def __init__(self,tipoJogo):
         self.janela = Window(1350, 600)
         self.mouse = self.janela.get_mouse()
-
+        self.tipoJogo = tipoJogo
         pygame.display.set_caption("Xadrez ES2") # Coloca titulo no trabalho
 
 # interface grafica do jogo referente ao tempo e troca de turno -----------------------------------------------------------------------
@@ -555,6 +556,7 @@ class Tabuleiro:
         self.matriz[acao.linha][acao.coluna].sprite.y = 75 * index
 
     def confirmaMovimento(self):
+
         updateMov = False
         updateAlvo = False
         acao = None
@@ -613,6 +615,9 @@ class Tabuleiro:
 
             if(self.rodada == "branco"):
                 self.rodada = "preto"
+                ia = Ia(self,"max","preto")
+                ia.buildTree(ia.tipo)
+
                 # toda vez que troca a jogada o tempo zera e a seta muda
                 self.apontaJogador.y = self.PPreta.y
                 self.tempoInij = pygame.time.get_ticks()

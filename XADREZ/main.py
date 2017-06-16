@@ -41,13 +41,15 @@ while resp:
     botaoRegras.draw()
     imagemTitulo.draw()
     imagemTabuleiro.draw()
+    tipoJogo = None
     if(mouse.is_button_pressed(1) and mouse.is_over_object(botao1j)):
-        ctypes.windll.user32.MessageBoxW(0, "Modo de Jogo não Disponível!", "Aviso!", 0)
-        #resp = False
-        #janela.delay(500)
+        resp = False
+        janela.delay(300)
+        tipoJogo = "1j"
     elif(mouse.is_button_pressed(1) and mouse.is_over_object(botao2j)):
         resp = False
         janela.delay(300)
+        tipoJogo = "2j"
     elif(mouse.is_button_pressed(1) and mouse.is_over_object(botaoPC)):
         ctypes.windll.user32.MessageBoxW(0, "Modo de Jogo não Disponível!", "Aviso!", 0)
         #resp = False
@@ -55,7 +57,7 @@ while resp:
 
 
 
-tab = Tabuleiro()
+tab = Tabuleiro(tipoJogo)
 
 tab.inicializaMatriz()
 
