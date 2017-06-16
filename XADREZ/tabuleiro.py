@@ -12,7 +12,10 @@ class Tabuleiro:
     preto = None
     verde = None
     selecaoSprite = None
-
+    contCheck = 0
+    corCheck = None
+    contCheckM = 0
+    corCheck = None
     pretasComidas = []
     brancasComidas = []
     casaBrancosMortos = []
@@ -41,16 +44,16 @@ class Tabuleiro:
         self.spriteVez.y = 250
 
         self.PPreta = Sprite("Sprites/ppreta.png")
-        self.PPreta.x = 800 + 300
-        self.PPreta.y = 330
+        self.PPreta.x = 800 + 240
+        self.PPreta.y = 320
 
         self.PBranca = Sprite("Sprites/pbranco.png") #TODO: trocar sprite para legível
-        self.PBranca.x = 800 + 300
-        self.PBranca.y = 380
+        self.PBranca.x = 800 + 240
+        self.PBranca.y = 370
 
         self.apontaJogador = Sprite("Sprites/apontaj.png")
-        self.apontaJogador.x = 730 + 300
-        self.apontaJogador.y = 380
+        self.apontaJogador.x = 730 + 240
+        self.apontaJogador.y = 370
 
         self.tempoJ = Sprite("Sprites/tempoj.png")
         self.tempoJ.x = 670 + 300
@@ -240,46 +243,6 @@ class Tabuleiro:
 
             if(self.selecao.tipo == "cavalo"):
                 self.movimento_cavalo()
-
-    def defineAlvos(self):
-
-            if (self.selecao != None):
-                # definindo os alvos do peao -------------------------------------------------------------------
-
-                if (self.selecao.cor == self.rodada):
-                    if (self.selecao.tipo == "peao"):
-                        if (self.rodada == "branco"):
-                            lin = self.selecao.linha - 1;
-                            colD = self.selecao.coluna + 1;
-                            colE = self.selecao.coluna - 1;
-                        if (self.rodada == "preto"):
-                            lin = self.selecao.linha + 1;
-                            colD = self.selecao.coluna + 1;
-                            colE = self.selecao.coluna - 1;
-                        if (lin >= 0 and lin < len(self.matriz[0])):
-                            if (colD < len(self.matriz[0])):
-                                if (self.matriz[lin][colD] != "vazio"):
-                                    if (self.matriz[lin][colD].cor != self.rodada):
-                                        self.matriz[lin][colD].alvo = True
-                            if (colE >= 0):
-                                if (self.matriz[lin][colE] != "vazio"):
-                                    if (self.matriz[lin][colE].cor != self.rodada):
-                                        self.matriz[lin][colE].alvo = True
-                                        # definindo os alvos da torre -------------------------------------------------------------------
-                    if (self.selecao.tipo == "torre"):
-                        True
-                        # definindo os alvos do bispo -------------------------------------------------------------------
-                    if (self.selecao.tipo == "bispo"):
-                        True
-                        # definindo os alvos do rei -------------------------------------------------------------------
-                    if (self.selecao.tipo == "rei"):
-                        True
-                        # definindo os alvos da rainha -------------------------------------------------------------------
-                    if (self.selecao.tipo == "rainha"):
-                        True
-                        # definindo os alvos do cavalo -------------------------------------------------------------------
-                    if (self.selecao.tipo == "cavalo"):
-                        True
 
     def movimento_bispo(self, inc_linha = 0, inc_coluna = 0):
         if(inc_linha == 0 and inc_coluna == 0):
@@ -659,8 +622,7 @@ class Tabuleiro:
                 self.tempoInij = pygame.time.get_ticks()
             self.selecaoSprite.x=self.janela.width
             self.selecaoSprite.y=self.janela.height
-            cont = self.verificaCheck()
-
+            self.contCheck = self.verificaCheck()
 
     def atualizaAlvo(self):
         self.spriteAlvo = Sprite("Sprites/selecao.png")
@@ -671,6 +633,7 @@ class Tabuleiro:
                         self.spriteAlvo.y = self.matriz[i][j].sprite.y
                         self.spriteAlvo.x = self.matriz[i][j].sprite.x
                         self.spriteAlvo.draw()
+
 
     def desenhaMatSprites(self):
 
@@ -697,7 +660,7 @@ class Tabuleiro:
             self.casas[i].draw()
 
     def verificaCheck(self):
-        self.cont = 0
+        self.contCheck = 0
         tempRodada = self.rodada 
         for x in range(0, len(self.matriz)):
             for y in range(0, len(self.matriz[0])):
@@ -716,7 +679,9 @@ class Tabuleiro:
                                     if(self.matriz[l][c].alvo == True ):
                                         print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, " branco? ", self.matriz[l][c].alvo)
                                     if(self.matriz[l][c].tipo == "rei" and self.matriz[l][c].alvo == True ):
-                                        self.cont = self.cont + 1
+                                        self.contCheck = self.contCheck + 1
+                                        self.corCheck = self.matriz[l][c].cor
+
 
 # limpa a matriz para cada teste de cada peça os campos que ela marcou e os alvos-----------------------------------------------------------
 
@@ -729,8 +694,23 @@ class Tabuleiro:
                                         self.matriz[i][j].alvo = False
         self.selecao = None
 # retorna a resposta se 1 ou mais oponentes fazem meu rei de alvo --------------------------------------------
-        return self.cont
+        return self.contCheck
 
+    def verificaCheckM(self):
+       True
+
+    def desenhaCheck(self):
+
+        if(self.contCheck == 1 ):
+            self.spriteCheck = Sprite("Sprites/check.png")
+            if(self.corCheck=="preto"):
+                self.spriteCheck.x = self.PPreta.x + 150
+                self.spriteCheck.y = self.PPreta.y
+                self.spriteCheck.draw()
+            if (self.corCheck == "branco"):
+                self.spriteCheck.x = self.PBranca.x + 150
+                self.spriteCheck.y =self.PBranca.y
+                self.spriteCheck.draw()
 
 
 
@@ -751,7 +731,9 @@ class Tabuleiro:
                         colisao.x = 150 + j * self.tamanhoSprite
                         colisao.y = i * self.tamanhoSprite
                         colisao.draw()
-                    
+
+
+        self.desenhaCheck()
         self.desenhaMatSprites()
         self.efeito3d.draw()
         self.spriteVez.draw()
@@ -765,3 +747,4 @@ class Tabuleiro:
         self.selecaoSprite.draw()
         self.atualizaAlvo()
         self.janela.update()
+
