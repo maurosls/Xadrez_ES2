@@ -697,7 +697,38 @@ class Tabuleiro:
         return self.contCheck
 
     def verificaCheckM(self):
-       True
+        self.contCheckM = 0
+        self.tempRodada = self.rodada
+        for x in range(0, len(self.matriz)):
+            for y in range(0, len(self.matriz[0])):
+                self.rodada = self.tempRodada
+# varre o vetor para todas as peça para verificar se alguma peça minha faz o rei de alvo -------------------------------------------
+
+                if (self.matriz[x][y] != "vazio" and self.matriz[x][y].cor == self.rodada):
+                    self.selecao = self.matriz[x][y]
+                    self.defineDisponiveis()
+                    self.rodada = self.tempRodada
+
+                    for l in range(0, len(self.matriz)):
+                            for c in range(0, len(self.matriz[0])):
+                                self.rodada = self.tempRodada
+                                if (self.matriz[l][c] != "vazio" and self.matriz[l][c].cor != self.rodada):
+                                     if (self.matriz[l][c].tipo == "rei" and self.matriz[l][c].alvo == True):
+                                        self.contCheckM = self.contCheckM + 1
+                                        self.corCheckM = self.matriz[l][c].cor
+                    
+ # limpa a matriz para cada teste de cada peça os campos que ela marcou e os alvos-----------------------------------------------------------
+
+                for i in range(0, len(self.matriz)):
+                    for j in range(0, len(self.matriz[0])):
+                        if (self.matriz[i][j] != "vazio"):
+                            if (self.matriz[i][j].tipo == "disponivel"):
+                                self.matriz[i][j] = "vazio"
+                            elif (self.matriz[i][j].alvo == True):
+                                self.matriz[i][j].alvo = False
+
+# retorna a resposta se 1 ou mais se alguma peça minha faz o rei de alvo --------------------------------------------
+        return self.contCheckM
 
     def desenhaCheck(self):
 
@@ -732,6 +763,9 @@ class Tabuleiro:
                         colisao.y = i * self.tamanhoSprite
                         colisao.draw()
 
+
+        if(self.verificaCheckM()>=1):
+            print("chekM")
 
         self.desenhaCheck()
         self.desenhaMatSprites()
