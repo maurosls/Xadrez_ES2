@@ -51,7 +51,10 @@ class Ia:
                                 if(self.tabuleiroAuxiliar.matriz[i][j].tipo == "disponivel" or self.tabuleiroAuxiliar.matriz[i][j].alvo == True):
                                     coluna = self.listPecasIA[k].coluna
                                     linha = self.listPecasIA[k].linha
-                                    valor = self.listPecasIA[k].value
+                                    if self.tabuleiroAuxiliar.matriz[i][j].tipo == "disponivel":
+                                        valor = 0
+                                    elif self.tabuleiroAuxiliar.matriz[i][j].alvo == True:
+                                        valor = self.tabuleiroAuxiliar.matriz[i][j].value
                                     novoNo = node(valor,linha,coluna,i,j)
                                     if self.tabuleiroAuxiliar.matriz[i][j].alvo == True:
                                         novoNo.pecaComida = self.tabuleiroAuxiliar.matriz[i][j]
@@ -75,7 +78,10 @@ class Ia:
                                 if(self.tabuleiroAuxiliar.matriz[i][j].tipo == "disponivel" or self.tabuleiroAuxiliar.matriz[i][j].alvo == True):
                                     coluna = self.listPecasIA[k].coluna
                                     linha = self.listPecasIA[k].linha
-                                    valor = self.listPecasIA[k].value
+                                    if self.tabuleiroAuxiliar.matriz[i][j].tipo == "disponivel":
+                                        valor = 0
+                                    elif self.tabuleiroAuxiliar.matriz[i][j].alvo == True:
+                                        valor = self.tabuleiroAuxiliar.matriz[i][j].value
                                     novoNo = node(valor,linha,coluna,i,j)
                                     if self.tabuleiroAuxiliar.matriz[i][j].alvo == True:
                                         novoNo.pecaComida = self.tabuleiroAuxiliar.matriz[i][j]
@@ -99,7 +105,10 @@ class Ia:
                                 if(self.tabuleiroAuxiliar.matriz[i][j].tipo == "disponivel" or self.tabuleiroAuxiliar.matriz[i][j].alvo == True):
                                     coluna = self.listPecasIA[k].coluna
                                     linha = self.listPecasIA[k].linha
-                                    valor = self.listPecasIA[k].value
+                                    if self.tabuleiroAuxiliar.matriz[i][j].tipo == "disponivel":
+                                        valor = 0
+                                    elif self.tabuleiroAuxiliar.matriz[i][j].alvo == True:
+                                        valor = self.tabuleiroAuxiliar.matriz[i][j].value
                                     novoNo = node(valor,linha,coluna,i,j)
                                     if self.tabuleiroAuxiliar.matriz[i][j].alvo == True:
                                         novoNo.pecaComida = self.tabuleiroAuxiliar.matriz[i][j]
@@ -123,7 +132,10 @@ class Ia:
                                 if(self.tabuleiroAuxiliar.matriz[i][j].tipo == "disponivel" or self.tabuleiroAuxiliar.matriz[i][j].alvo == True):
                                     coluna = self.listPecasIA[k].coluna
                                     linha = self.listPecasIA[k].linha
-                                    valor = self.listPecasIA[k].value
+                                    if self.tabuleiroAuxiliar.matriz[i][j].tipo == "disponivel":
+                                        valor = 0
+                                    elif self.tabuleiroAuxiliar.matriz[i][j].alvo == True:
+                                        valor = self.tabuleiroAuxiliar.matriz[i][j].value
                                     novoNo = node(valor,linha,coluna,i,j)
                                     if self.tabuleiroAuxiliar.matriz[i][j].alvo == True:
                                         novoNo.pecaComida = self.tabuleiroAuxiliar.matriz[i][j]
@@ -148,7 +160,10 @@ class Ia:
                                 if(self.tabuleiroAuxiliar.matriz[i][j].tipo == "disponivel" or self.tabuleiroAuxiliar.matriz[i][j].alvo == True):
                                     coluna = self.listPecasIA[k].coluna
                                     linha = self.listPecasIA[k].linha
-                                    valor = self.listPecasIA[k].value
+                                    if self.tabuleiroAuxiliar.matriz[i][j].tipo == "disponivel":
+                                        valor = 0
+                                    elif self.tabuleiroAuxiliar.matriz[i][j].alvo == True:
+                                        valor = self.tabuleiroAuxiliar.matriz[i][j].value
                                     novoNo = node(valor,linha,coluna,i,j)
                                     if self.tabuleiroAuxiliar.matriz[i][j].alvo == True:
                                         novoNo.pecaComida = self.tabuleiroAuxiliar.matriz[i][j]
@@ -172,12 +187,14 @@ class Ia:
                                 if(self.tabuleiroAuxiliar.matriz[i][j].tipo == "disponivel" or self.tabuleiroAuxiliar.matriz[i][j].alvo == True):
                                     coluna = self.listPecasIA[k].coluna
                                     linha = self.listPecasIA[k].linha
-                                    valor = self.listPecasIA[k].value
+                                    if self.tabuleiroAuxiliar.matriz[i][j].tipo == "disponivel":
+                                        valor = 0
+                                    elif self.tabuleiroAuxiliar.matriz[i][j].alvo == True:
+                                        valor = self.tabuleiroAuxiliar.matriz[i][j].value
                                     novoNo = node(valor,linha,coluna,i,j)
                                     if self.tabuleiroAuxiliar.matriz[i][j].alvo == True:
                                         novoNo.pecaComida = self.tabuleiroAuxiliar.matriz[i][j]
                                     jogadasPossiveis.append(novoNo)
-
                     #limpando disponiveis e alvos
                     for i in range (0,8):
                         for j in range (0,8):
@@ -218,14 +235,18 @@ class Ia:
 
 
     def movePecas(self,node):
+        self.tabuleiroAuxiliar.matriz[node.linhaNova][node.colunaNova] = self.tabuleiroAuxiliar.matriz[node.linhaAntiga][node.colunaAntiga]
+        self.tabuleiroAuxiliar.matriz[node.linhaAntiga][node.colunaAntiga] = "vazio"
+        self.tabuleiroAuxiliar.matriz[node.linhaNova][node.colunaNova].coluna = node.colunaNova
+        self.tabuleiroAuxiliar.matriz[node.linhaNova][node.colunaNova].linha = node.linhaNova
+        if node.cost > 0:
+            return True
+        else:
+            return False
 
-        return
 
-
-
-    def realizaJogada(self):
-        node = None
-        node = self.buildTree()
-        self.movePecas(node)
+    def realizaJogada(self,tipo):
+        node = self.buildTree(tipo)
+        return self.movePecas(node)
 
 

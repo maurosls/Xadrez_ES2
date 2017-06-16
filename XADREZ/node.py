@@ -1,7 +1,5 @@
 class node:
-    custoPai = None
     cost = -1
-    tabuleiro = None
     linhaAntiga = None
     colunaAntiga = None
     linhaNova = None
