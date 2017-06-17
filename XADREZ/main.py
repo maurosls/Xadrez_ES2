@@ -3,6 +3,7 @@ from PPlay.window import *
 from PPlay.sprite import *
 import ctypes
 
+
 janela = Window(800, 600)
 resp = True
 mouse = janela.get_mouse()

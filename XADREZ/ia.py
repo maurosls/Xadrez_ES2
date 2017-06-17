@@ -3,7 +3,7 @@ from peca import *
 from node import *
 import copy
 import random
-
+import time
 class Ia:
 
     tabuleiro = None
@@ -247,6 +247,7 @@ class Ia:
 
     def realizaJogada(self,tipo):
         node = self.buildTree(tipo)
+        time.sleep(0.4)
         return self.movePecas(node)
 
 
