@@ -14,8 +14,8 @@ class Tabuleiro:
     selecaoSprite = None
     contCheck = 0
     corCheck = None
-    contCheckM = 0
-    corCheck = None
+    checkM = False
+    corCheckM = None
     pretasComidas = []
     brancasComidas = []
     casaBrancosMortos = []
@@ -209,7 +209,6 @@ class Tabuleiro:
                                                                                    self.matriz[i][j].sprite) and
                                                                                    self.matriz[i][j].cor == "preto")):
                         if (self.matriz[i][j].cor == self.rodada):
-
                             self.janela.update()
                             self.selecaoSprite.x = self.matriz[i][j].sprite.x
                             self.selecaoSprite.y = self.matriz[i][j].sprite.y
@@ -551,6 +550,15 @@ class Tabuleiro:
                 index = index - 8
         self.matriz[acao.linha][acao.coluna].sprite.y = 75 * index
 
+    def limpaDisponíveis(self):
+        for x in range(0, len(self.matriz)):
+            for y in range(0, len(self.matriz[0])):
+                if (self.matriz[x][y] != "vazio"):
+                    if (self.matriz[x][y].tipo == "disponivel"):
+                        self.matriz[x][y] = "vazio"
+                    elif(self.matriz[x][y].alvo == True):
+                        self.matriz[x][y].alvo = False
+
     def confirmaMovimento(self):
         updateMov = False
         updateAlvo = False
@@ -579,8 +587,6 @@ class Tabuleiro:
                 if (self.selecao.tipo=="peao"):
                     self.selecao.jaMoveu = True
 
-
-
             elif(updateAlvo==True):
                 self.moveOMorto(acao)
                 self.matriz[acao.linha][acao.coluna].alvo = False
@@ -589,25 +595,13 @@ class Tabuleiro:
                 self.selecao.coluna = acao.coluna
                 self.matriz[acao.linha][acao.coluna] = self.selecao
 
-
-            for x in range(0, len(self.matriz)):
-                for y in range(0, len(self.matriz[0])):
-                    if (self.matriz[x][y] != "vazio"):
-                        if (self.matriz[x][y].tipo == "disponivel"):
-                            self.matriz[x][y] = "vazio"
-                        elif(self.matriz[x][y].alvo == True):
-                            self.matriz[x][y].alvo = False
-
-
+            self.limpaDisponíveis()
             self.janela.update()
             self.desenha_base_do_Tabuleiro()
             self.desenhaMatSprites()
             self.desenhaMat_de_Mortos()
             self.janela.update()
             self.verificaPromocao(self.matriz[acao.linha][acao.coluna])
-
-
-
 
             if(self.rodada == "branco"):
                 self.rodada = "preto"
@@ -620,9 +614,12 @@ class Tabuleiro:
                 # toda vez que troca a jogada o tempo zera e a seta muda
                 self.apontaJogador.y = self.PBranca.y
                 self.tempoInij = pygame.time.get_ticks()
+
             self.selecaoSprite.x=self.janela.width
             self.selecaoSprite.y=self.janela.height
+            
             self.contCheck = self.verificaCheck()
+            self.checkM = self.verificaCheckM()
 
     def atualizaAlvo(self):
         self.spriteAlvo = Sprite("Sprites/selecao.png")
@@ -645,7 +642,6 @@ class Tabuleiro:
                     self.matriz[i][j].sprite.draw()
 
     def desenhaMat_de_Mortos(self):
-
         for i in range(0, len(self.casaBrancosMortos)):
             self.casaBrancosMortos[i].draw()
         for i in range(0, len(self.casaPretosMortos)):
@@ -661,12 +657,11 @@ class Tabuleiro:
 
     def verificaCheck(self):
         self.contCheck = 0
+        self.corCheck = None
         tempRodada = self.rodada 
         for x in range(0, len(self.matriz)):
             for y in range(0, len(self.matriz[0])):
-
-# varre o vetor para todos os adversarios procurando se algum deles faz o rei inimigo de alvo -------------------------------------------
-
+                    # varre o vetor para todos os adversarios procurando se algum deles faz o rei inimigo de alvo -------------------------------------------
                     if(self.matriz[x][y] != "vazio" and  self.matriz[x][y].cor != self.rodada):
                         self.selecao = self.matriz[x][y]
                         self.rodada = self.selecao.cor
@@ -676,59 +671,68 @@ class Tabuleiro:
                         for l in range(0, len(self.matriz)):
                             for c in range(0, len(self.matriz[0])):
                                 if(self.matriz[l][c] != "vazio" and self.matriz[l][c].cor == self.rodada):
-                                    if(self.matriz[l][c].alvo == True ):
-                                        print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, " branco")
+                                    # if(self.matriz[l][c].alvo == True ):
+                                        # print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, " branco")
                                     if(self.matriz[l][c].tipo == "rei" and self.matriz[l][c].alvo == True ):
                                         self.contCheck = self.contCheck + 1
                                         self.corCheck = self.matriz[l][c].cor
 
-
-# limpa a matriz para cada teste de cada peça os campos que ela marcou e os alvos-----------------------------------------------------------
-
-                    for i in range(0, len(self.matriz)):
-                            for j in range(0, len(self.matriz[0])):
-                                if (self.matriz[i][j] != "vazio"):
-                                    if (self.matriz[i][j].tipo == "disponivel"):
-                                        self.matriz[i][j] = "vazio"
-                                    elif (self.matriz[i][j].alvo == True):
-                                        self.matriz[i][j].alvo = False
+                        self.limpaDisponíveis()
         self.selecao = None
-# retorna a resposta se 1 ou mais oponentes fazem meu rei de alvo --------------------------------------------
+        # retorna a resposta se 1 ou mais oponentes fazem meu rei de alvo --------------------------------------------
         return self.contCheck
 
     def verificaCheckM(self):
-        self.contCheckM = 0
+        self.checkM = False
+        self.corCheckM = None
         self.tempRodada = self.rodada
+
         for x in range(0, len(self.matriz)):
             for y in range(0, len(self.matriz[0])):
-                self.rodada = self.tempRodada
-# varre o vetor para todas as peça para verificar se alguma peça minha faz o rei de alvo -------------------------------------------
-
-                if (self.matriz[x][y] != "vazio" and self.matriz[x][y].cor == self.rodada):
+        
+                # varre o vetor para todas as peça para verificar se alguma peça minha faz o rei de alvo --------------------------------------
+                if (self.matriz[x][y] != "vazio" and self.matriz[x][y].cor == self.rodada and self.matriz[x][y].tipo == "rei"):
                     self.selecao = self.matriz[x][y]
+                    self.rodada = self.selecao.cor
                     self.defineDisponiveis()
                     self.rodada = self.tempRodada
-
+                    primeiraVez = True
+                    disponiveis = []
                     for l in range(0, len(self.matriz)):
-                            for c in range(0, len(self.matriz[0])):
-                                self.rodada = self.tempRodada
-                                if (self.matriz[l][c] != "vazio" and self.matriz[l][c].cor != self.rodada):
-                                     if (self.matriz[l][c].tipo == "rei" and self.matriz[l][c].alvo == True):
-                                        self.contCheckM = self.contCheckM + 1
-                                        self.corCheckM = self.matriz[l][c].cor
-                    
- # limpa a matriz para cada teste de cada peça os campos que ela marcou e os alvos-----------------------------------------------------------
+                        for c in range(0, len(self.matriz[0])):
+                            if (self.matriz[l][c] != "vazio" and self.matriz[l][c].tipo == "disponivel"):
+                                disponiveis.append(self.matriz[l][c])
 
-                for i in range(0, len(self.matriz)):
-                    for j in range(0, len(self.matriz[0])):
-                        if (self.matriz[i][j] != "vazio"):
-                            if (self.matriz[i][j].tipo == "disponivel"):
-                                self.matriz[i][j] = "vazio"
-                            elif (self.matriz[i][j].alvo == True):
-                                self.matriz[i][j].alvo = False
-
-# retorna a resposta se 1 ou mais se alguma peça minha faz o rei de alvo --------------------------------------------
-        return self.contCheckM
+                    # move o rei para cada posicao disponível
+                    for i in range(0, len(disponiveis)):
+                        if (primeiraVez == True):
+                            self.checkM = True
+                            self.corCheckM = self.rodada
+                            primeiraVez = False
+                        disponivel = disponiveis[i]
+                        rei = self.matriz[x][y]
+                        self.matriz[x][y] = "vazio"
+                        rei.linha = disponivel.linha
+                        rei.coluna = disponivel.coluna
+                        self.matriz[disponivel.linha][disponivel.coluna] = rei
+                        self.selecao = None    
+        
+                        # verifica se nessa posição ele se encontra em check
+                        if (self.verificaCheck() == 0):
+                            self.checkM = False
+                            self.corCheckM = self.rodada
+        
+                        # restaura o rei para a posição inicial
+                        rei.linha = x
+                        rei.coluna = y
+                        self.matriz[x][y] = rei
+                        self.matriz[disponivel.linha][disponivel.coluna] = "vazio"
+                        self.selecao = self.matriz[x][y]     
+                    # limpa a matriz para cada teste de cada peça os campos que ela marcou e os alvos-----------------------------------------------------------
+                    self.limpaDisponíveis()
+        # retorna a resposta se 1 ou mais se alguma peça minha faz o rei de alvo --------------------------------------------
+        self.selecao = None
+        return self.checkM
 
     def desenhaCheck(self):
 
@@ -762,10 +766,6 @@ class Tabuleiro:
                         colisao.x = 150 + j * self.tamanhoSprite
                         colisao.y = i * self.tamanhoSprite
                         colisao.draw()
-
-
-        if(self.verificaCheckM()>=1):
-            print("chekM")
 
         self.desenhaCheck()
         self.desenhaMatSprites()

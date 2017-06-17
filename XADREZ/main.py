@@ -59,8 +59,9 @@ tab = Tabuleiro()
 
 tab.inicializaMatriz()
 
-while True:
+loop = True
 
+while loop:
     tab.atualiza()
     tab.selecionaPeca()
     tab.defineDisponiveis()
@@ -68,5 +69,7 @@ while True:
     if(tab.selecao != "vazio" and tab.selecao != None):
         tab.confirmaMovimento()
 
+    if(tab.checkM == True):
+        loop = False
 
 
