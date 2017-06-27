@@ -2,6 +2,7 @@ from tabuleiro import *
 from PPlay.window import *
 from PPlay.sprite import *
 import ctypes
+import webbrowser
 
 janela = Window(800, 600)
 resp = True
@@ -23,6 +24,7 @@ botaoPC.y= 400
 botaoRegras = Sprite("Sprites/botaoreg.png")
 botaoRegras.x= 100
 botaoRegras.y= 500
+url = "http://baquara.com/xadrez/movimentos.htm"
 
 imagemTitulo = Sprite("Sprites/nomej.png")
 imagemTitulo.x= 100
@@ -52,6 +54,8 @@ while resp:
         ctypes.windll.user32.MessageBoxW(0, "Modo de Jogo não Disponível!", "Aviso!", 0)
         #resp = False
         #janela.delay(500)
+    elif(mouse.is_button_pressed(1) and mouse.is_over_object(botaoRegras)):
+        webbrowser.open(url, new=0,autoraise=True)
 
 
 
