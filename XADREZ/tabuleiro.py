@@ -615,9 +615,10 @@ class Tabuleiro:
 
             if(self.rodada == "branco"):
                 self.rodada = "preto"
-                ia = Ia(self,"max","preto")
-                ia.realizaJogada("max")
-                self.rodada = "branco"
+                if self.tipoJogo == "1j":
+                    ia = Ia(self,"max","preto")
+                    ia.realizaJogada("max")
+                    self.rodada = "branco"
                 # toda vez que troca a jogada o tempo zera e a seta muda
                 self.apontaJogador.y = self.PPreta.y
                 self.tempoInij = pygame.time.get_ticks()
