@@ -1,6 +1,7 @@
 from PPlay.window import *
 from PPlay.sprite import *
 from peca import *
+import ctypes
 
 class Tabuleiro:
 
@@ -620,6 +621,8 @@ class Tabuleiro:
             
             self.contCheck = self.verificaCheck()
             self.checkM = self.verificaCheckM()
+            if(self.checkM):
+                ctypes.windll.user32.MessageBoxW(0, "A cor "+self.corCheckM+" perdeu", "Aviso!", 0)
 
     def atualizaAlvo(self):
         self.spriteAlvo = Sprite("Sprites/selecao.png")
