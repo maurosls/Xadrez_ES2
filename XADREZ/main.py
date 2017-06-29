@@ -62,12 +62,17 @@ tab = Tabuleiro(tipoJogo)
 
 tab.inicializaMatriz()
 
-while True:
+loop = True
 
+while loop:
     tab.atualiza()
     tab.selecionaPeca()
     tab.defineDisponiveis()
-    tab.defineAlvos()
     tab.atualiza()
     if(tab.selecao != "vazio" and tab.selecao != None):
         tab.confirmaMovimento()
+
+    if(tab.checkM == True):
+        loop = False
+
+
