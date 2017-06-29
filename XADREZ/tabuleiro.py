@@ -663,8 +663,8 @@ class Tabuleiro:
                         for l in range(0, len(self.matriz)):
                             for c in range(0, len(self.matriz[0])):
                                 if(self.matriz[l][c] != "vazio" and self.matriz[l][c].cor == self.rodada):
-                                    # if(self.matriz[l][c].alvo == True ):
-                                        # print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, " branco")
+                                    if(self.matriz[l][c].alvo == True ):
+                                        print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, " branco")
                                     if(self.matriz[l][c].tipo == "rei" and self.matriz[l][c].alvo == True ):
                                         self.contCheck = self.contCheck + 1
                                         self.corCheck = self.matriz[l][c].cor
@@ -728,7 +728,7 @@ class Tabuleiro:
 
     def desenhaCheck(self):
 
-        if(self.contCheck == 1 ):
+        if(self.contCheck >= 1 ):
             self.spriteCheck = Sprite("Sprites/check.png")
             if(self.corCheck=="preto"):
                 self.spriteCheck.x = self.PPreta.x + 150
@@ -759,6 +759,7 @@ class Tabuleiro:
                         colisao.y = i * self.tamanhoSprite
                         colisao.draw()
 
+        
         self.desenhaCheck()
         self.desenhaMatSprites()
         self.efeito3d.draw()
