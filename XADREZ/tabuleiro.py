@@ -617,9 +617,8 @@ class Tabuleiro:
             self.selecaoSprite.x=self.janela.width
             self.selecaoSprite.y=self.janela.height
             
-            print(self.contCheck)
-            self.contCheck = self.verificaCheck()
-            print(self.contCheck)            
+            # print(self.contCheck)
+            self.contCheck = self.verificaCheck()           
             self.checkM = self.verificaCheckM()
             
             if(self.checkM):
@@ -651,19 +650,17 @@ class Tabuleiro:
             self.casas[i].draw()
 
     def desenhaCheck(self):
-            print ("verifica")
             self.spriteCheck = Sprite("Sprites/check.png")
             if(self.corCheck=="preto"):
                 self.spriteCheck.x = self.PPreta.x + 150
                 self.spriteCheck.y = self.PPreta.y
             if (self.corCheck == "branco"):
                 self.spriteCheck.x = self.PBranca.x + 150
-                self.spriteCheck.y =self.PBranca.y
-            print("draw realizado")    
+                self.spriteCheck.y =self.PBranca.y  
             self.spriteCheck.draw()
 
     def verificaCheck(self):
-        self.contCheck = 0
+        check = 0
         self.corCheck = None
         tempRodada = self.rodada 
         for x in range(0, len(self.matriz)):
@@ -683,16 +680,16 @@ class Tabuleiro:
                                          self.contCheck = self.contCheck + 1
                                          self.corCheck = self.matriz[l][c].cor
                                          
-                                        if(self.matriz[l][c].cor =="preto"):
-                                         print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, "branco")
-                                        else:
-                                         print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, "preto")
+                                        # if(self.matriz[l][c].cor =="preto"):
+                                         # print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, "branco")
+                                        # else:
+                                         # print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, "preto")
 
 
                         self.limpaDisponíveis()
         self.selecao = None
         # retorna a resposta se 1 ou mais oponentes fazem meu rei de alvo --------------------------------------------
-        return self.contCheck
+        return check
 
     def verificaCheckM(self):
         self.checkM = False
@@ -728,12 +725,12 @@ class Tabuleiro:
                         rei.coluna = disponivel.coluna
                         self.matriz[disponivel.linha][disponivel.coluna] = rei
                         self.selecao = None    
-        
+                        tempCorCheck = self.corCheck
                         # verifica se nessa posição ele se encontra em check
                         if (self.verificaCheck() == 0):
                             self.checkM = False
                             self.corCheckM = self.rodada
-        
+                        self.corCheck = tempCorCheck
                         # restaura o rei para a posição inicial
                         rei.linha = x
                         rei.coluna = y
