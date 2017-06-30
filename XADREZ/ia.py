@@ -235,14 +235,15 @@ class Ia:
 
 
     def movePecas(self,node):
+        pecaComida = self.tabuleiroAuxiliar.matriz[node.linhaNova][node.colunaNova]
         self.tabuleiroAuxiliar.matriz[node.linhaNova][node.colunaNova] = self.tabuleiroAuxiliar.matriz[node.linhaAntiga][node.colunaAntiga]
         self.tabuleiroAuxiliar.matriz[node.linhaAntiga][node.colunaAntiga] = "vazio"
         self.tabuleiroAuxiliar.matriz[node.linhaNova][node.colunaNova].coluna = node.colunaNova
         self.tabuleiroAuxiliar.matriz[node.linhaNova][node.colunaNova].linha = node.linhaNova
         if node.cost > 0:
-            return True
+            return pecaComida
         else:
-            return False
+            return None
 
 
     def realizaJogada(self,tipo):

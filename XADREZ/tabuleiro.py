@@ -23,6 +23,11 @@ class Tabuleiro:
     casas = None
     selecao = None
 
+    pretasComidas = []
+    brancasComidas = []
+    casaBrancosMortos = []
+    casaPretosMortos = []
+
     rodada = None
 
     matriz = None
@@ -92,6 +97,32 @@ class Tabuleiro:
         self.selecaoSprite = Sprite("Sprites/selecao.png")
         self.selecaoSprite.x = self.janela.width
         self.selecaoSprite.y = self.janela.height
+     #Inicializaçao das casas dos mortos-------------------------------------------------------------------------------------------------------------------------------------------------
+        cor = "preto"
+        for i in range (0, 16):
+            if (cor == "preto"):
+                morto1 = Sprite("Sprites/morto-1.png")
+                morto2 = Sprite("Sprites/morto-2.png")
+                cor = "branco"
+            else:
+                morto1 = Sprite("Sprites/morto-2.png")
+                morto2 = Sprite("Sprites/morto-1.png")
+                cor = "preto"
+            if( i < 8):
+                morto1.x = 0
+                morto2.x = 750
+                index = i
+            else:
+                temp = morto1
+                morto1 = morto2
+                morto2 = temp
+                morto1.x = 75
+                morto2.x = 825
+                index = i - 8
+            morto1.y = index * self.tamanhoSprite
+            morto2.y = index * self.tamanhoSprite
+            self.casaBrancosMortos.append(morto1)
+            self.casaPretosMortos.append(morto2)
 
 
 # método para verificar o tempo do jogo ---------------------------------------------------------------------------------------------------------
@@ -543,6 +574,25 @@ class Tabuleiro:
             else:
                 self.estadoPromocaoPeao = False
 
+    def moveOMorto(self, acao):
+        if(self.matriz[acao.linha][acao.coluna].cor == "branco"):
+            self.brancasComidas.append(self.matriz[acao.linha][acao.coluna])
+            index = len(self.brancasComidas)-1      
+            if(index < 8):
+                self.matriz[acao.linha][acao.coluna].sprite.x = 0
+            else:
+                self.matriz[acao.linha][acao.coluna].sprite.x = 75
+                index = index - 8
+        if(self.matriz[acao.linha][acao.coluna].cor == "preto"):
+            self.pretasComidas.append(self.matriz[acao.linha][acao.coluna])
+            index = len(self.pretasComidas)-1
+            if(index < 8):
+                self.matriz[acao.linha][acao.coluna].sprite.x = 750
+            else:
+                self.matriz[acao.linha][acao.coluna].sprite.x = 825
+                index = index - 8
+        self.matriz[acao.linha][acao.coluna].sprite.y = 75 * index 
+
     def limpaDisponíveis(self):
 
         for x in range(0, len(self.matriz)):
@@ -583,7 +633,7 @@ class Tabuleiro:
                     self.selecao.jaMoveu = True
 
             elif(updateAlvo==True):
-           #     self.moveOMorto(acao)
+                self.moveOMorto(acao)
                 self.matriz[acao.linha][acao.coluna].alvo = False
                 self.matriz[self.selecao.linha][self.selecao.coluna] = "vazio"
                 self.selecao.linha = acao.linha
@@ -594,7 +644,7 @@ class Tabuleiro:
             self.janela.update()
             self.desenha_base_do_Tabuleiro()
             self.desenhaMatSprites()
-           # self.desenhaMat_de_Mortos()
+            self.desenhaMat_de_Mortos()
             self.janela.update()
             self.verificaPromocao(self.matriz[acao.linha][acao.coluna])
 
@@ -602,7 +652,9 @@ class Tabuleiro:
                 self.rodada = "preto"
                 if self.tipoJogo == "1j":
                     ia = Ia(self,"max","preto")
-                    ia.realizaJogada("max")
+                    pecaComida = ia.realizaJogada("max")
+                    if(pecaComida != None):
+                        self.moveOMorto(pecaComida)
                     self.rodada = "branco"
                 # toda vez que troca a jogada o tempo zera e a seta muda
                 self.apontaJogador.y = self.PPreta.y
@@ -651,6 +703,7 @@ class Tabuleiro:
 
     def desenhaCheck(self):
             self.spriteCheck = Sprite("Sprites/check.png")
+            # print(self.corCheck)
             if(self.corCheck=="preto"):
                 self.spriteCheck.x = self.PPreta.x + 150
                 self.spriteCheck.y = self.PPreta.y
@@ -659,33 +712,39 @@ class Tabuleiro:
                 self.spriteCheck.y =self.PBranca.y  
             self.spriteCheck.draw()
 
+    def desenhaMat_de_Mortos(self):
+        for i in range(0, len(self.casaBrancosMortos)):
+            self.casaBrancosMortos[i].draw()
+        for i in range(0, len(self.casaPretosMortos)):
+            self.casaPretosMortos[i].draw()
+        for i in range(0, len(self.brancasComidas)):
+            print(self.brancasComidas[i])
+            self.brancasComidas[i].sprite.draw()
+        for i in range(0, len(self.pretasComidas)):
+            self.pretasComidas[i].sprite.draw()
+
     def verificaCheck(self):
         check = 0
         self.corCheck = None
-        tempRodada = self.rodada 
+        tempRodada = self.rodada
         for x in range(0, len(self.matriz)):
             for y in range(0, len(self.matriz[0])):
                     # varre o vetor para todos os adversarios procurando se algum deles faz o rei inimigo de alvo -------------------------------------------
-                    if(self.matriz[x][y] != "vazio"):
+                    if(self.matriz[x][y] != "vazio" and  self.matriz[x][y].cor != self.rodada):
                         self.selecao = self.matriz[x][y]
                         self.rodada = self.selecao.cor
                         self.defineDisponiveis()
                         self.rodada = tempRodada
-
+ 
                         for l in range(0, len(self.matriz)):
                             for c in range(0, len(self.matriz[0])):
-                                if(self.matriz[l][c] != "vazio"):
-                                    if(self.matriz[l][c].alvo == True ):
-                                        if(self.matriz[l][c].tipo == "rei" and self.matriz[l][c].alvo == True ):
-                                         self.contCheck = self.contCheck + 1
-                                         self.corCheck = self.matriz[l][c].cor
-                                         
-                                        # if(self.matriz[l][c].cor =="preto"):
-                                         # print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, "branco")
-                                        # else:
-                                         # print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, "preto")
-
-
+                                if(self.matriz[l][c] != "vazio" and self.matriz[l][c].cor == self.rodada):
+                                    # if(self.matriz[l][c].alvo == True ):
+                                        # print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, " branco")
+                                    if(self.matriz[l][c].tipo == "rei" and self.matriz[l][c].alvo == True ):
+                                        check = check + 1
+                                        self.corCheck = self.matriz[l][c].cor
+ 
                         self.limpaDisponíveis()
         self.selecao = None
         # retorna a resposta se 1 ou mais oponentes fazem meu rei de alvo --------------------------------------------
@@ -754,7 +813,7 @@ class Tabuleiro:
 
         self.desenha_base_do_Tabuleiro()
 
-        #self.desenhaMat_de_Mortos()
+        self.desenhaMat_de_Mortos()
 
         for i in range(0,len(self.matriz)):
             for j in range(0,len(self.matriz[0])):
