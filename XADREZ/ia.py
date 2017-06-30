@@ -203,7 +203,7 @@ class Ia:
                                     self.tabuleiroAuxiliar.matriz[i][j] = "vazio"
                                 else:
                                     self.tabuleiroAuxiliar.matriz[i][j].alvo = False
-            print("Numero de jogadas: ",len(jogadasPossiveis))
+           # print("Numero de jogadas: ",len(jogadasPossiveis))
             #escolhendo melhores jogadas podendo ter mais de uma com o mesmo peso
             #caso tenham mais de uma sera aleatoria a escolha
             #deixando a IA menos previsivel
@@ -216,9 +216,9 @@ class Ia:
                     maiorValor = jogadasPossiveis[i].cost
                     poolJogadas.clear()
                     poolJogadas.append(jogadasPossiveis[i])
-            print("numero pool: ",len(poolJogadas))
+            #print("numero pool: ",len(poolJogadas))
             pos = random.randint(0,len(poolJogadas) - 1)
-            print("random: ",pos)
+            #print("random: ",pos)
             #realiza jogada do node pos
 
             #joga jogada realizada para buildtree 'mini'

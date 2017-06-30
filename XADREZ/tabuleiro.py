@@ -654,9 +654,11 @@ class Tabuleiro:
                 if self.tipoJogo == "1j":
                     ia = Ia(self,"max","preto")
                     selecao, alvo = ia.realizaJogada("max")
+
                     myselecao = self.matriz[selecao.linha][selecao.coluna]
                     myacao = self.matriz[alvo.linha][alvo.coluna]
                     if(alvo.tipo == "disponivel"):
+
                         self.matriz[myselecao.linha][myselecao.coluna] = "vazio"
                         myselecao.linha = alvo.linha
                         myselecao.coluna = alvo.coluna
@@ -664,6 +666,11 @@ class Tabuleiro:
                         if (myselecao.tipo=="peao"):
                             myselecao.jaMoveu = True
                     else:
+                        if(alvo.tipo== "rei"):
+                            self.checkM=True
+                            ctypes.windll.user32.MessageBoxW(0, "A cor preta ganhou", "Aviso!", 0)
+                            return
+
                         self.moveOMorto(myacao)
                         self.matriz[myacao.linha][myacao.coluna].alvo = False
                         self.matriz[myselecao.linha][myselecao.coluna] = "vazio"
@@ -671,7 +678,11 @@ class Tabuleiro:
                         myselecao.coluna = myacao.coluna
                         self.matriz[myacao.linha][myacao.coluna] = myselecao
 
+
+
+
                     self.rodada = "branco"
+                self.verificaCheck()
                 # toda vez que troca a jogada o tempo zera e a seta muda
                 self.apontaJogador.y = self.PPreta.y
                 self.tempoInij = pygame.time.get_ticks()
@@ -740,7 +751,9 @@ class Tabuleiro:
 
     def verificaCheck(self):
         check = 0
-        self.corCheck = None
+        self.corCheck = self.rodada
+        self.desenhaCheck
+
         tempRodada = self.rodada
         for x in range(0, len(self.matriz)):
             for y in range(0, len(self.matriz[0])):
@@ -766,6 +779,35 @@ class Tabuleiro:
         return check
 
     def verificaCheckM(self):
+
+        check = 0
+        self.corCheck = self.rodada
+        self.desenhaCheck
+        tempRodada = self.rodada
+        for x in range(0, len(self.matriz)):
+            for y in range(0, len(self.matriz[0])):
+                # varre o vetor para todos os adversarios procurando se algum deles faz o rei inimigo de alvo -------------------------------------------
+                if (self.matriz[x][y] != "vazio" and self.matriz[x][y].cor == self.rodada):
+                    self.selecao = self.matriz[x][y]
+                    self.rodada = self.selecao.cor
+                    self.defineDisponiveis()
+                    self.rodada = tempRodada
+
+                    for l in range(0, len(self.matriz)):
+                        for c in range(0, len(self.matriz[0])):
+                            if (self.matriz[l][c] != "vazio" and self.matriz[l][c].cor != self.rodada):
+                                # if(self.matriz[l][c].alvo == True ):
+                                # print("matriz[",l,"][", c,"]: ", self.matriz[l][c].tipo, " da cor ",self.matriz[l][c].cor," é alvo do ", self.matriz[x][y].tipo, " branco")
+                                if (self.matriz[l][c].tipo == "rei" and self.matriz[l][c].alvo == True):
+                                       self.limpaDisponíveis()
+                                       self.selecao = None
+                                       self.corCheckM = self.matriz[x][y].cor
+                                       return True
+
+
+
+
+
         self.checkM = False
         self.corCheckM = None
         self.tempRodada = self.rodada
