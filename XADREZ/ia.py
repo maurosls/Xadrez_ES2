@@ -235,15 +235,18 @@ class Ia:
 
 
     def movePecas(self,node):
-        pecaComida = self.tabuleiroAuxiliar.matriz[node.linhaNova][node.colunaNova]
-        self.tabuleiroAuxiliar.matriz[node.linhaNova][node.colunaNova] = self.tabuleiroAuxiliar.matriz[node.linhaAntiga][node.colunaAntiga]
-        self.tabuleiroAuxiliar.matriz[node.linhaAntiga][node.colunaAntiga] = "vazio"
-        self.tabuleiroAuxiliar.matriz[node.linhaNova][node.colunaNova].coluna = node.colunaNova
-        self.tabuleiroAuxiliar.matriz[node.linhaNova][node.colunaNova].linha = node.linhaNova
-        if node.cost > 0:
-            return pecaComida
-        else:
-            return None
+        alvo = self.tabuleiro.matriz[node.linhaNova][node.colunaNova]
+        selecao = self.tabuleiroAuxiliar.matriz[node.linhaAntiga][node.colunaAntiga]
+        if(alvo == "vazio"):
+            alvo = Peca("disponivel", None, Sprite("Sprites/verde.png"), node.linhaNova, node.colunaNova, False)
+        # self.tabuleiroAuxiliar.matriz[node.linhaNova][node.colunaNova] = self.tabuleiroAuxiliar.matriz[node.linhaAntiga][node.colunaAntiga]
+        # self.tabuleiroAuxiliar.matriz[node.linhaAntiga][node.colunaAntiga] = "vazio"
+        # self.tabuleiroAuxiliar.matriz[node.linhaNova][node.colunaNova].coluna = node.colunaNova
+        # self.tabuleiroAuxiliar.matriz[node.linhaNova][node.colunaNova].linha = node.linhaNova
+        # if node.cost > 0:
+        return selecao, alvo
+        # else:
+            # return selecao, None
 
 
     def realizaJogada(self,tipo):

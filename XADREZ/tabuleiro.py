@@ -591,10 +591,11 @@ class Tabuleiro:
             else:
                 self.matriz[acao.linha][acao.coluna].sprite.x = 825
                 index = index - 8
-        self.matriz[acao.linha][acao.coluna].sprite.y = 75 * index 
+        for i in range(0, len(self.brancasComidas)):
+            print(self.brancasComidas[i])
+        self.matriz[acao.linha][acao.coluna].sprite.y = 75 * index
 
     def limpaDisponíveis(self):
-
         for x in range(0, len(self.matriz)):
             for y in range(0, len(self.matriz[0])):
                 if (self.matriz[x][y] != "vazio"):
@@ -652,9 +653,24 @@ class Tabuleiro:
                 self.rodada = "preto"
                 if self.tipoJogo == "1j":
                     ia = Ia(self,"max","preto")
-                    pecaComida = ia.realizaJogada("max")
-                    if(pecaComida != None):
-                        self.moveOMorto(pecaComida)
+                    selecao, alvo = ia.realizaJogada("max")
+                    myselecao = self.matriz[selecao.linha][selecao.coluna]
+                    myacao = self.matriz[alvo.linha][alvo.coluna]
+                    if(alvo.tipo == "disponivel"):
+                        self.matriz[myselecao.linha][myselecao.coluna] = "vazio"
+                        myselecao.linha = alvo.linha
+                        myselecao.coluna = alvo.coluna
+                        self.matriz[alvo.linha][alvo.coluna] = myselecao
+                        if (myselecao.tipo=="peao"):
+                            myselecao.jaMoveu = True
+                    else:
+                        self.moveOMorto(myacao)
+                        self.matriz[myacao.linha][myacao.coluna].alvo = False
+                        self.matriz[myselecao.linha][myselecao.coluna] = "vazio"
+                        myselecao.linha = myacao.linha
+                        myselecao.coluna = myacao.coluna
+                        self.matriz[myacao.linha][myacao.coluna] = myselecao
+
                     self.rodada = "branco"
                 # toda vez que troca a jogada o tempo zera e a seta muda
                 self.apontaJogador.y = self.PPreta.y
@@ -668,7 +684,6 @@ class Tabuleiro:
 
             self.selecaoSprite.x=self.janela.width
             self.selecaoSprite.y=self.janela.height
-            
             # print(self.contCheck)
             self.contCheck = self.verificaCheck()           
             self.checkM = self.verificaCheckM()
@@ -718,7 +733,7 @@ class Tabuleiro:
         for i in range(0, len(self.casaPretosMortos)):
             self.casaPretosMortos[i].draw()
         for i in range(0, len(self.brancasComidas)):
-            print(self.brancasComidas[i])
+            # print(self.brancasComidas[i])
             self.brancasComidas[i].sprite.draw()
         for i in range(0, len(self.pretasComidas)):
             self.pretasComidas[i].sprite.draw()
