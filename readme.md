@@ -4,29 +4,18 @@ Este projeto é dedicado a disciplina Engenharia de Software 2 de 2017.2 da UFF-
 
 ## Começando
 
-TODO: Como dar deploy
-
 ### Pre requisitos
 
-Este projeto requer o uso da biblioteca PPLAY, encontrado em http://www2.ic.uff.br/pplay/
+Este projeto requer os seguintes componentes
+* [Python 3.6](https://www.python.org/downloads/)
+* [PPlay](http://www2.ic.uff.br/pplay/) - Biblioteca para jogos desenvolvida pela UFF
+* [PyGame‑1.9.3‑cp36‑cp36m](http://www.lfd.uci.edu/~gohlke/pythonlibs/#pygame) - Biblioteca Python para games, que é dependência do PPlay. Basta extraí-lo(renomeando o formato de .whl para .rar) e colocá-lo na pasta Lib que está dentro da pasta onde o Python está instalado. 
+* **Alterar para branch _Release_**
 
-## TODO: Testes
 
-Explain how to run the automated tests for this system
+### Executando
 
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-## Executando
-
-TODO: como executar 
-
-É necessário ter instalado o compilador do Python instalado na versão 3.6 - https://www.python.org/downloads/
-
-Além disso também é necessário ter na máquina o pygame "pygame‑1.9.3‑cp36‑cp36m" - http://www.lfd.uci.edu/~gohlke/pythonlibs/#pygame ,  bastando extraí-lo(renomeando o formato de .whl para .rar) e colocá-lo na pasta Lib que está dentro da pasta onde o Python está instalado. 
-
-Tendo feito os passos acima, basta rodar a classe Main com o compilador python ou por alguma IDE.
+Tendo todos os pre requisitos cumpridos, chamar a classe main.py
 ## Construído com 
 
 * [PyCharm](https://www.jetbrains.com/pycharm) - IDE para Python
